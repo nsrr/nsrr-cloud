@@ -1,0 +1,17 @@
+**/.env*
+**node_modules/
+**/*.edf*
+**.DS_store
+**metadata.json
+**.terraform*
+**terraform.tfstate*
+*token*
+**.EDF
+**.edf
+**.xml
+**.XML
+**.pyc 
+**dist/
+**.egg-info/
+**build/
+**__pycache__/
