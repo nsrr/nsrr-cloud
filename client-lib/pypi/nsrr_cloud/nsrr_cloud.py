@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 import requests
 from requests.structures import CaseInsensitiveDict
-from dotenv import load_dotenv
 import json
 import getpass
 from pathlib import Path 
@@ -9,8 +8,8 @@ import hashlib
 
 # Global variables 
 #API_SERVER='https://dev-cloud.sleepdata.org'
-#API_SERVER='https://cloud.sleepdata.org'
-API_SERVER='http://localhost:9002/api/v1'
+API_SERVER='https://cloud.sleepdata.org/api/v1'
+#API_SERVER='http://localhost:9002/api/v1'
 
 def get_input_token():
     enter_pass_text="""
