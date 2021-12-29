@@ -39,14 +39,17 @@ Use the scripts in 'auth_data_transfer' folder (specific  to MGB server, update 
 ### Run scripts
 
 Run the script 'get_s3_files_list.js' to get metadata of hosted datasets from S3 buckets,
+
 `ex: node get_s3_files_list.js cfs`
 
 Repeat the above command per dataset. Also, you will have to run the above command everytime any new file are added or deleted from a dataset.
 
 Run the script 'get_aws_ips.py' to get IP addresses of AWS ecosystem,
+
 `python3 get_aws_ips.py`
 
 ### Run server
 
 Once all the above steps are completed, you can start the auth server,
+
 `node server.js`
