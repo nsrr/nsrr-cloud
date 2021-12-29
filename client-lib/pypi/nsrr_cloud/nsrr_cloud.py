@@ -158,7 +158,7 @@ def download_all_files(user_token, dataset_name, force, no_md5):
             else:
                 print("ERROR: Unable to download controlled files, try again later")
     else:
-        print("ERROR: Unable to retrieve files list of dataset {0}".format(dataset_name))
+        print("ERROR: Unable to retrieve files list of dataset {0}, check list of cloud hosted datasets and try again".format(dataset_name))
 
 def read_token_from_file(file_name):
     try:

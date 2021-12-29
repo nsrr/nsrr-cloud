@@ -62,7 +62,7 @@ Delete any existing distributions in the dist folder,
 
 `rm -rf dist/*`
 
-Update setup.py and nsrr_cloud/__init__.py to bump version number,
+Update setup.py, nsrr_cloud/__main__.py and nsrr_cloud/__init__.py to bump version number,
 ```
 ex: vi nsrr_cloud/__init__.py
 __version__ = "x.x.x"

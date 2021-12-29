@@ -7,6 +7,7 @@ import argparse
 # Global variables 
 VERSION_MAJOR='0'
 VERSION_MINOR='1'
+VERSION_PATCH='2'
 
 def main() -> None:
     desc_text="""This library provides access to Sleep resources hosted by NSRR
@@ -29,7 +30,7 @@ def main() -> None:
         print("Error: Invalid run command, use --help argument to learn more")
         raise SystemExit()
     if args.version and len(sys.argv)==2:
-        print("NSRR-Cloud version "+VERSION_MAJOR+"."+VERSION_MINOR)
+        print("nsrr-cloud version "+VERSION_MAJOR+"."+VERSION_MINOR+"."+VERSION_PATCH)
         return
     if args.dataset and args.list_subjects and len(sys.argv)==3:
         nsrr_cloud.list_all_subjects(args.dataset)
