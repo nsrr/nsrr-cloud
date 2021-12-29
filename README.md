@@ -10,7 +10,7 @@ Single repository for Complete NSRR Cloud system:
 
 ## NSRR Cloud user guide
 
-Python Client library package is available at https://pypi.org/nsrr-cloud and can be installed using following command,
+Python Client library package is available at https://pypi.org/project/nsrr-cloud and can be installed using following command,
 
 `pip install nsrr-cloud`
 

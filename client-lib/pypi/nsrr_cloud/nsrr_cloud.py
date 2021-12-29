@@ -7,7 +7,7 @@ from pathlib import Path
 import hashlib
 
 # Global variables 
-#API_SERVER='https://dev-cloud.sleepdata.org'
+#API_SERVER='https://dev-cloud.sleepdata.org/api/v1'
 API_SERVER='https://cloud.sleepdata.org/api/v1'
 #API_SERVER='http://localhost:9002/api/v1'
 
