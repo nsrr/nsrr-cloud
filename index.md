@@ -72,5 +72,12 @@ To forcefully download the whole dataset,
 `nsrr_cloud -d [--dataset=cfs]  --force`
 
 
-## Perform sleep analysis using matlab 
+## Example sleep analysis using matlab 
+
+If you have followed above steps to access NSRR Cloud resources, you should have the following setup completed,
+- AWS account and compute instance up and running
+- 'nsrr-cloud' python library installed
+
+For this example sleep analysis workflow, we are going to use Matlab tool. You can install matlab following the link [Install Matlab](https://www.mathworks.com/help/install/install-products.html)
+
 
