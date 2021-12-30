@@ -2,7 +2,7 @@
 
 Over the past decade, we have been experiencing a gradual increase in adoption of Cloud usage in IT industry. One of the main benefits of Cloud is on-demand, wide-variety of scalable IT resources that users can access at their fingertips. 
 
-NSRR has been traditionally serving Sleep reseearchers with resources using On-premise hosting services. For Sleep researhcers to fully realize potential of IT Cloud services, we are migrating Sleep research resources to Cloud based hosting solution. Below listed are the potential benefits of nsrr-cloud:
+NSRR has been traditionally serving Sleep researchers with resources using On-premise hosting services. For Sleep researchers to fully realize potential of IT Cloud services, we are migrating Sleep research resources to Cloud based hosting solution. Below listed are the potential benefits of nsrr-cloud:
 - Users can skip maintaining individual copies of Sleep studies; Users can access files to perform analysis and delete them as needed
 - Access partial datasets to enable researchers with smaller compute and storage resources to perform analysis
 - Uniform network bandwidth serving Sleep Studies
@@ -27,7 +27,7 @@ Python Client library package is available at [nsrr-cloud](https://pypi.org/proj
 
 It is recommended to use python version 3.8.x.
 
-Compatible with Mac, Linux and Windows (tested on win10 powershell with admin privileges).
+Compatible with Mac, Linux and Windows (tested on win10 PowerShell with admin privileges).
 
 ### Usage
 
@@ -60,7 +60,7 @@ To provide password during command execution instead of interactive way,
 `nsrr_cloud -d [--dataset=cfs] [--token-file=token.txt]`
 
 Data Integrity check is performed via the following two options.
-- (Recommended) md5 checksum value is unique to every file. This option verifies that the downloaded file is exactly the same as being served by NSRR using md5 checksum value comparison. 
+- (Recommended) md5 checksum value is unique to every file. This option verifies that the downloaded file is same as being served by NSRR using md5 checksum value comparison. 
 - file size check to match with download size of the file hosted by NSRR.
 
 To skip memory intensive data-integrity check,
@@ -78,6 +78,6 @@ If you have followed above steps to access NSRR Cloud resources, you should have
 - AWS account and compute instance up and running
 - 'nsrr-cloud' python library installed
 
-For this example sleep analysis workflow, we are going to use Matlab tool. You can install matlab by following link - [Install Matlab](https://www.mathworks.com/help/install/install-products.html)
+For this example, sleep analysis workflow, we are going to use Matlab tool. You can install matlab by following link - [Install Matlab](https://www.mathworks.com/help/install/install-products.html)
 
 
