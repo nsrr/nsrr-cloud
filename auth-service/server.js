@@ -46,7 +46,7 @@ fs.readFile('hosted_datasets.txt', 'utf8' , (err, data) => {
     }
     metadata_list=data.split("\n")
     metadata_list.forEach(set => {
-        set_row=set.split(",")
+        var set_row=set.split(",")
         datasets_list.push(set_row[0])
     })
     dataset_not_found_error="Dataset was not found.\n"+
@@ -66,7 +66,7 @@ const pool = new Pool({
   const is_valid_request = (request) =>{
     return new Promise((resolve,reject) =>{
         //return resolve("success")
-        client_ip=''
+        var client_ip=''
         console.log(request.headers['x-forwarded-for'])
         console.log(request.socket.remoteAddress)
         if(request.headers['x-forwarded-for']){
@@ -111,7 +111,6 @@ const pool = new Pool({
         }
         else{
             reject("Unable to determine requestor ip-address, contact admin at support-cloud@sleepdata.org")
-            return
         }
     })
 }
@@ -124,10 +123,8 @@ function generateAccessToken(payload_info) {
             if(err){
                 console.log("error: ",err)
                 reject(false)
-                return 
             } else{
                 resolve(token)
-                return
             }
         });  
     })  
@@ -140,7 +137,6 @@ const in_maintenance_window = () =>{
             date=new Date();
         }
         resolve("")
-        return
     })
 }
 
@@ -196,7 +192,7 @@ router.get('/auth-token',function(request, response,next){
                                             const p1=cipher.update(payload, 'utf8');
                                             const p2=cipher.final()
                                             const payload_enc=Buffer.concat([p1, p2]).toString('hex');
-                                            await generateAccessToken(payload_enc).then(data => b_token=data).catch(err => next(err))
+                                            await generateAccessToken(payload_enc).then(data2 => b_token=data2).catch(err2 => next(err2))
                                             if(b_token){
                                                 console.log("token is: ",b_token)
                                                 response.status(200).send({"auth_token": b_token})
@@ -256,7 +252,7 @@ router.get('/list/access',function(request, response,next){
                                 next(new Error("Server failure"))
                             }
                             else{
-                                datasets=[]
+                                var datasets=[]
                                 res.rows.forEach(row => {
                                     if(row["dataset_slug"].includes("-commercial-use")){
                                         datasets.push(row["dataset_slug"].split("-commercial-use")[0])      
@@ -299,7 +295,7 @@ router.get('/list/all-files',function(request, response, next){
               next(new Error("Server Error"))
               return
             }
-            json_tosend=JSON.parse(data);
+            var json_tosend=JSON.parse(data);
             console.log(json_tosend)
             response.status(200).send(json_tosend)
           })

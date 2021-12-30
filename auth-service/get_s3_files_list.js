@@ -5,7 +5,7 @@ if(process.argv.length !=3){
     console.log("Expecting only 1 input parameter. Run command is node get_s3_files_list.js <dataset_name>")
     return
 }
-dataset_name= process.argv[2]
+var dataset_name= process.argv[2]
 
 require('dotenv').config();
 AWS.config.update({
@@ -89,7 +89,7 @@ fs.readFile('hosted_datasets.txt', 'utf8' , (err, data) => {
     }
     metadata_list=data.split("\n")
     metadata_list.forEach(set => {
-        set_row=set.split(",")
+        var set_row=set.split(",")
         datasets_list.push(set_row[0])
 
     })
