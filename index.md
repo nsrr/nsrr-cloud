@@ -7,7 +7,7 @@ NSRR has been traditionally serving Sleep reseearchers with resources using On-p
 - Access partial datasets to enable researchers with smaller compute and storage resources to perform analysis
 - Uniform network bandwidth serving Sleep Studies
 
-As of 01 Jan 2022, we have hosted CFS dataset in Cloud. Users can access CFS using their existing Sleepdata.org token.
+As of 01 Jan 2022, we have hosted CFS dataset in Cloud. Users can access CFS using their existing Sleepdata.org token. And currently NSS Cloud is available only from AWS cloud services.
 
 ## Get Started with AWS Cloud
 
@@ -78,6 +78,6 @@ If you have followed above steps to access NSRR Cloud resources, you should have
 - AWS account and compute instance up and running
 - 'nsrr-cloud' python library installed
 
-For this example sleep analysis workflow, we are going to use Matlab tool. You can install matlab following the link [Install Matlab](https://www.mathworks.com/help/install/install-products.html)
+For this example sleep analysis workflow, we are going to use Matlab tool. You can install matlab by following link - [Install Matlab](https://www.mathworks.com/help/install/install-products.html)
 
 
