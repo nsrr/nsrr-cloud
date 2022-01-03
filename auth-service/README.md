@@ -8,6 +8,7 @@ Sub-component of NSRR Cloud providing authentication and authorization to access
 Following installation are necessary to start development,
 - Node.js (version >=16)
 - Python (version >=3.6)
+- Postgres (AWS RDS)
 
 ### Initialization
 
@@ -32,6 +33,9 @@ And set up a '.env' file with following secrets,
 
 
 ### Add authn/authz data to RDS
+
+Use the script 'db.sql' to generate necessary tables in (AWS RDS) Postgres database instance.
+
 Use the scripts in 'auth_data_transfer' folder (specific  to MGB server, update them as needed),
 - To encrypt auth data and transfer to AWS S3
 - To download and decrypt and upload to AWS RDS 

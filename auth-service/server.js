@@ -65,7 +65,6 @@ const pool = new Pool({
 
   const is_valid_request = (request) =>{
     return new Promise((resolve,reject) =>{
-        //return resolve("success")
         var client_ip=''
         console.log(request.headers['x-forwarded-for'])
         console.log(request.socket.remoteAddress)
@@ -78,20 +77,19 @@ const pool = new Pool({
         }
         if (client_ip){
             try{
-                const msg="Service is available only within AWS cloud, please try again from withtin AWS environment"
+                const msg="Error: service is available only from AWS cloud"
                 const script ="python3 check_whitelist_ip.py "+client_ip
                 async function check(){
                     try{
                         const { stdout, stderr } = await exec(script);
-                        console.log('stdout:', stdout)
-                        console.error('stderr:',stderr)
                         if(stderr){
+                            console.error('stderr:',stderr)
                             reject (msg)
                             return
                         } else{
                             console.log(stdout.trim())
                             if(stdout.trim() == "True"){
-                                resolve("success")
+                                resolve(client_ip)
                                 return
                             } else{
                                 reject(msg)
@@ -145,6 +143,7 @@ router.get('/auth-token',function(request, response,next){
         try{
             await in_maintenance_window();
             await is_valid_request(request).then(data => {
+                const requestor_ip = data
                 const sleepdata_user_token = request.headers.token
                 var dataset_name = request.query.dataset_name 
                 if(!datasets_list.includes(dataset_name)){
@@ -196,6 +195,24 @@ router.get('/auth-token',function(request, response,next){
                                             if(b_token){
                                                 console.log("token is: ",b_token)
                                                 response.status(200).send({"auth_token": b_token})
+                                                // insert into pg table for audit
+                                                const created_time=new Date();
+                                                const token_audit_fn=async function(){
+                                                    const client = await pool.connect()
+                                                    try{
+                                                        const token_audit_text='INSERT INTO public.bearer_token_audit( \
+                                                            user_id, user_token, requested_dataset_slug, final_requested_dataset_slug, bearer_token,requestor_ip, created_at) \
+                                                            VALUES ( $1, $2, $3,$4,$5,$6,$7);'
+                                                        client.query(token_audit_text, [user_id, user_token,request.query.dataset_name,dataset_name,b_token,requestor_ip,created_time],function(err,res){
+                                                            if (err){
+                                                                console.log("System Error in inserting into token audit table")
+                                                            }
+                                                        })
+                                                    } catch(error){
+                                                        console.log("Error in inserting into token audit table")
+                                                    }
+                                                }
+                                                token_audit_fn();
                                             }
                                         } catch(error){
                                             next(error)
@@ -399,6 +416,24 @@ router.get('/download/url/controlled', function(request, response,next){
                             })
                             response.status(200).send(url)
                             // insert into pg table for audit
+                            const requested_time=new Date();
+                            const file_audit_fn=async function(){
+                                const client = await pool.connect()
+                                try{
+                                    const file_audit_text='INSERT INTO public.controlled_file_audits( \
+                                        dataset_slug, bearer_token, requested_file_path, requested_at) \
+                                        VALUES ( $1, $2, $3,$4);'
+                                    client.query(file_audit_text, [dataset_name,token,download_file_path,requested_time],function(err,res){
+                                        if (err){
+                                            console.log("err is ",err)
+                                            console.log("System Error in inserting into file audit table")
+                                        }
+                                    })
+                                } catch(error){
+                                    console.log("Error in inserting into file audit table")
+                                }
+                            }
+                            file_audit_fn();
                         }
                         else{
                             next(new Error("No downloads available"))
