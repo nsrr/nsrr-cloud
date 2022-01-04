@@ -7,7 +7,7 @@ NSRR has been traditionally serving Sleep researchers with resources using On-pr
 - Access partial datasets to enable researchers with smaller compute and storage resources to perform analysis
 - Uniform network bandwidth serving Sleep Studies
 
-As of 01 Jan 2022, we have hosted CFS dataset in Cloud. Users can access CFS using their existing Sleepdata.org token. And currently NSS Cloud is available only from AWS cloud services.
+As of 01 Jan 2022, we have hosted CFS dataset in Cloud. Users can access CFS using their existing Sleepdata.org token. And currently NSRR Cloud is available only from AWS cloud services.
 
 ## Get Started with AWS Cloud
 
