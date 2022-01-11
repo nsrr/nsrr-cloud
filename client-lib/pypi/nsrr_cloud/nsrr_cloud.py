@@ -189,7 +189,6 @@ def get_subject_files_list(dataset_name,subject):
         return False
 
 def download_subject_files(user_token,dataset_name,subject, force, no_md5):
-    print("Requested for download of a subject specific files from a dataset")
     all_files=get_subject_files_list(dataset_name,subject)
     if(all_files):
         download_wrapper(all_files,user_token, dataset_name, force, no_md5)

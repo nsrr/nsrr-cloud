@@ -333,8 +333,9 @@ router.get('/list/all-subjects', function(request, response, next){
               return
             }
             var json_tosend={};
-            json_tosend["subjects"]=data.toString().split("\n");
-            console.log(json_tosend)
+            all_subjects_unfiltered=data.toString().split("\n")
+            all_subjects=all_subjects_unfiltered.filter(n => n)
+            json_tosend["subjects"]=all_subjects;
             response.status(200).send(json_tosend)
           })
 
