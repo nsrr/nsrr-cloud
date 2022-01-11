@@ -322,8 +322,50 @@ router.get('/list/all-files',function(request, response, next){
 })
 
 router.get('/list/all-subjects', function(request, response, next){
+    var dataset_name= request.query.dataset_name;
+    try{
+        if(!datasets_list.includes(dataset_name)){
+            throw new Error(dataset_not_found_error)
+        }
+        fs.readFile("metadata/"+dataset_name+"_all_subjects.txt",'utf8' , (err, data) => {
+            if (err) {
+              next(new Error("Server Error"))
+              return
+            }
+            var json_tosend={};
+            json_tosend["subjects"]=data.toString().split("\n");
+            console.log(json_tosend)
+            response.status(200).send(json_tosend)
+          })
 
+    } catch(error){
+        next(error)
+    }
+})
 
+router.get('/list/subject-files', function(request, response, next){
+    var dataset_name= request.query.dataset_name;
+    var subject=request.query.subject
+    try{
+        if(!datasets_list.includes(dataset_name)){
+            throw new Error(dataset_not_found_error)
+        }
+        fs.readFile("metadata/"+dataset_name+"_metadata_by_subject.json",'utf8' , (err, data) => {
+            if (err) {
+              next(new Error("Server Error"))
+              return
+            }
+            var json_tosend={};
+            all_subjects=JSON.parse(data);
+            
+            json_tosend=all_subjects[subject]
+            console.log(json_tosend)
+            response.status(200).send(json_tosend)
+          })
+
+    } catch(error){
+        next(error)
+    }
 })
 
 async function check_download_exists(params){

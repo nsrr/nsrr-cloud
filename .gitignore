@@ -2,7 +2,8 @@
 **node_modules/
 **/*.edf*
 **.DS_store
-**metadata.json
+**metadata*.json
+**subjects.txt
 **.terraform*
 **terraform.tfstate*
 *token*

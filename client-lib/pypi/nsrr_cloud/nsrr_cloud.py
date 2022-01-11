@@ -19,6 +19,16 @@ def get_input_token():
     """
     return getpass.getpass(enter_pass_text)
 
+def read_token_from_file(file_name):
+    try:
+        f=open(file_name,'r')
+        user_token=f.readline().strip()
+        f.close()
+        return user_token
+    except Exception as e:
+        print("ERROR: the following error occured while reading token from input file")
+        print(e)
+
 def get_user_access(user_token):
     headers = CaseInsensitiveDict()
     headers= {'token': user_token}
@@ -120,58 +130,85 @@ def get_all_files_list(dataset_name):
     except Exception as e:
         return False
 
+
+def download_wrapper(all_files,user_token, dataset_name, force, no_md5):
+    all_files=json.loads(all_files)
+    for f in all_files["open_files"]:
+        if not force:
+            file_path=Path(str(Path.cwd())+"/"+f)
+            if file_path.is_file():
+                continue
+        url=get_download_url(file_name=f)
+        if(url):
+            download_success=download_file(url,f,no_md5,all_files["open_files"][f])
+            if not download_success:
+                print("ERROR: Unable to download file {0}".format(f))
+        else:
+            print("ERROR: Unable to get download URL for file {0}, try again later".format(f))
+
+ 
+    if(all_files["controlled_files"]):
+        # get bearer token
+        auth_token=get_auth_token(user_token, dataset_name)
+        if(auth_token):
+            for f in all_files["controlled_files"]:
+                f_with_dataset=dataset_name+"/"+f
+                if not force:
+                    file_path=Path(str(Path.cwd())+"/"+f_with_dataset)
+                    if file_path.is_file():
+                        continue
+                url=get_download_url(auth_token=auth_token,file_name=f)
+                if(url):
+                    download_success=download_file(url,f_with_dataset,no_md5,all_files["controlled_files"][f])
+                    if not download_success:
+                        print("ERROR: Unable to download file {0}".format(f))
+                else:
+                    print("ERROR: Unable to get download URL for file {0}, try again later".format(f))
+        else:
+            print("ERROR: Unable to download controlled files, try again later")
+
+
 def download_all_files(user_token, dataset_name, force, no_md5):
     all_files=get_all_files_list(dataset_name)
     if(all_files):
-        all_files=json.loads(all_files)
-        for f in all_files["open_files"]:
-            if not force:
-                file_path=Path(str(Path.cwd())+"/"+f)
-                if file_path.is_file():
-                    continue      
-            url=get_download_url(file_name=f)
-            if(url):
-                download_success=download_file(url,f,no_md5,all_files["open_files"][f])
-                if not download_success:
-                    print("ERROR: Unable to download file {0}".format(f))
-            else:
-                print("ERROR: Unable to get download URL for file {0}, try again later".format(f))
+        download_wrapper(all_files,user_token, dataset_name, force, no_md5)
 
- 
-        if(all_files["controlled_files"]):
-            # get bearer token
-            auth_token=get_auth_token(user_token, dataset_name)
-            if(auth_token):
-                for f in all_files["controlled_files"]:
-                    f_with_dataset=dataset_name+"/"+f
-                    if not force:
-                        file_path=Path(str(Path.cwd())+"/"+f_with_dataset)
-                        if file_path.is_file():
-                            continue
-                    url=get_download_url(auth_token=auth_token,file_name=f)
-                    if(url):
-                        download_success=download_file(url,f_with_dataset,no_md5,all_files["controlled_files"][f])
-                        if not download_success:
-                            print("ERROR: Unable to download file {0}".format(f))
-                    else:
-                        print("ERROR: Unable to get download URL for file {0}, try again later".format(f))
-            else:
-                print("ERROR: Unable to download controlled files, try again later")
     else:
         print("ERROR: Unable to retrieve files list of dataset {0}, check list of cloud hosted datasets and try again".format(dataset_name))
 
-def read_token_from_file(file_name):
-    try:
-        f=open(file_name,'r')
-        user_token=f.readline().strip()
-        f.close()
-        return user_token
-    except Exception as e:
-        print("ERROR: the following error occured while reading token from input file")
-        print(e)
 
-def download_subject_files(user_token,dataset,subject, force, no_md5):
+def get_subject_files_list(dataset_name,subject):
+    payload = {'dataset_name': dataset_name, 'subject': subject}
+    try:
+        resp = requests.get(API_SERVER+'/list/subject-files', params=payload)
+        if(resp.ok and resp.status_code == 200):
+            return resp.content
+        else:
+            return False
+    except Exception as e:
+        return False
+
+def download_subject_files(user_token,dataset_name,subject, force, no_md5):
     print("Requested for download of a subject specific files from a dataset")
+    all_files=get_subject_files_list(dataset_name,subject)
+    if(all_files):
+        download_wrapper(all_files,user_token, dataset_name, force, no_md5)
+    else:
+        print("ERROR: Unable to retrieve files list of subject {0} of dataset {1}, check list of cloud hosted datasets and try again".format(subject,dataset_name))
+
+
 
 def list_all_subjects(dataset_name):
-    print("Requested for listing of all subjects from a dataset")
+    payload = {'dataset_name': dataset_name}
+    try:
+        resp = requests.get(API_SERVER+'/list/all-subjects', params=payload)
+        if(resp.ok and resp.status_code == 200):
+            all_subjects_json=json.loads(resp.content)
+            if(all_subjects_json["subjects"]):
+                all_subjects=", ".join(list(all_subjects_json["subjects"]))
+            print("Subjects are: ",all_subjects)
+        else:
+            print("ERROR: Unable to list all subject of {0} dataset, check list of cloud hosted datasets and try again".format(dataset_name))
+    except Exception as e:
+        print("ERROR: Unable to process request at this time, try again later")
+

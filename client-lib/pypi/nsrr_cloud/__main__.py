@@ -34,6 +34,7 @@ def main() -> None:
         return
     if args.dataset and args.list_subjects and len(sys.argv)==3:
         nsrr_cloud.list_all_subjects(args.dataset)
+        return
     if args.list_access:
         if args.token_file and len(sys.argv)==3:
             user_token=nsrr_cloud.read_token_from_file(args.token_file)
