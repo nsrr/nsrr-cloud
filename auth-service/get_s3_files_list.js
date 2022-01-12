@@ -25,7 +25,10 @@ async function get_files(params){
     res.Contents.forEach(file_obj => all_files.push(file_obj));
     if (res.NextContinuationToken) {
       params.ContinuationToken = res.NextContinuationToken;
-      await get_files(params); 
+      next_res = await get_files(params);
+      if(typeof next_res !== "undefined"){
+          next_res.forEach(file_obj => all_files.push(file_obj));
+      }
     }
     return all_files;
 }

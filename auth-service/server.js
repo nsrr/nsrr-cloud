@@ -117,7 +117,7 @@ const pool = new Pool({
 
 function generateAccessToken(payload_info) {
     return new Promise((resolve,reject) =>{
-        jwt.sign({payload: payload_info}, process.env.SIGN_KEY,{expiresIn: 360}, function(err, token) {
+        jwt.sign({payload: payload_info}, process.env.SIGN_KEY,{expiresIn: 5}, function(err, token) {
             if(err){
                 console.log("error: ",err)
                 reject(false)
@@ -210,6 +210,8 @@ router.get('/auth-token',function(request, response,next){
                                                         })
                                                     } catch(error){
                                                         console.log("Error in inserting into token audit table")
+                                                    } finally{
+                                                        client.release();
                                                     }
                                                 }
                                                 token_audit_fn();
@@ -285,6 +287,8 @@ router.get('/list/access',function(request, response,next){
                         })
                     } catch(error){
                         next(new Error("Server failure"))
+                    } finally{
+                        client.release();
                     }
                 }
                 get_user_dbs()
@@ -313,7 +317,6 @@ router.get('/list/all-files',function(request, response, next){
               return
             }
             var json_tosend=JSON.parse(data);
-            console.log(json_tosend)
             response.status(200).send(json_tosend)
           })
     } catch(error){
@@ -474,6 +477,8 @@ router.get('/download/url/controlled', function(request, response,next){
                                     })
                                 } catch(error){
                                     console.log("Error in inserting into file audit table")
+                                } finally{
+                                    client.release();
                                 }
                             }
                             file_audit_fn();

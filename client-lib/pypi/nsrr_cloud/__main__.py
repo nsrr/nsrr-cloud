@@ -7,7 +7,7 @@ import argparse
 # Global variables 
 VERSION_MAJOR='0'
 VERSION_MINOR='2'
-VERSION_PATCH='1'
+VERSION_PATCH='2'
 
 def main() -> None:
     desc_text="""This library provides access to Sleep resources hosted by NSRR

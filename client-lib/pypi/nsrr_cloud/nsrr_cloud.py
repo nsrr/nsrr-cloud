@@ -149,14 +149,14 @@ def download_wrapper(all_files,user_token, dataset_name, force, no_md5):
  
     if(all_files["controlled_files"]):
         # get bearer token
-        auth_token=get_auth_token(user_token, dataset_name)
-        if(auth_token):
-            for f in all_files["controlled_files"]:
-                f_with_dataset=dataset_name+"/"+f
-                if not force:
-                    file_path=Path(str(Path.cwd())+"/"+f_with_dataset)
-                    if file_path.is_file():
-                        continue
+        for f in all_files["controlled_files"]:
+            f_with_dataset=dataset_name+"/"+f
+            if not force:
+                file_path=Path(str(Path.cwd())+"/"+f_with_dataset)
+                if file_path.is_file():
+                    continue
+            auth_token=get_auth_token(user_token, dataset_name)
+            if(auth_token):
                 url=get_download_url(auth_token=auth_token,file_name=f)
                 if(url):
                     download_success=download_file(url,f_with_dataset,no_md5,all_files["controlled_files"][f])
@@ -164,8 +164,8 @@ def download_wrapper(all_files,user_token, dataset_name, force, no_md5):
                         print("ERROR: Unable to download file {0}".format(f))
                 else:
                     print("ERROR: Unable to get download URL for file {0}, try again later".format(f))
-        else:
-            print("ERROR: Unable to download controlled files, try again later")
+            else:
+                print("ERROR: Unable to download controlled files, try again later")
 
 
 def download_all_files(user_token, dataset_name, force, no_md5):
