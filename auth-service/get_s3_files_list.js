@@ -5,7 +5,8 @@ if(process.argv.length !=3){
     console.log("Expecting only 1 input parameter. Run command is node get_s3_files_list.js <dataset_name>")
     return
 }
-var dataset_name= process.argv[2]
+var d_name= process.argv[2]
+const dataset_name=d_name.toLowerCase()
 
 require('dotenv').config();
 AWS.config.update({
@@ -82,6 +83,7 @@ function get_files_list(dataset_name, control_type){
 }
 
 var datasets_list=[]
+var datasets_list_original=[]
 var metadata_list=[]
 var dataset_not_found_error=''
 
@@ -92,16 +94,17 @@ fs.readFile('hosted_datasets.txt', 'utf8' , (err, data) => {
     }
     metadata_list=data.split("\n")
     metadata_list.forEach(set => {
-        var set_row=set.split(",")
-        datasets_list.push(set_row[0])
+        var set_row=set.split("\t")
+        datasets_list.push(set_row[0].toLowerCase())
+        datasets_list_original.push(set_row[0])
 
     })
     dataset_not_found_error="Dataset was not found.\n"+
-                            "Did you mean one of: "+datasets_list.join(", ")
+                            "Did you mean one of: "+datasets_list_original.join(", ")
     var control_type="controlled"
     metadata_list.forEach(set => {
-        if(set.split(",")[0] == dataset_name){
-            if(set.split(",")[1] == "open"){
+        if(set.split("\t")[0].toLowerCase() == dataset_name){
+            if(set.split("\t")[3] == "open"){
                 control_type="open"
             }
         }

@@ -6,6 +6,15 @@ nsrr-cloud is a Python library to access NSRR Cloud resources.
 
 `pip install nsrr-cloud`
 
+If both version of python i.e., python2.x and python3.x are installed in the OS then you can use below command to call python3 based pip using,
+
+`pip3 install nsrr-cloud`
+
+If python3 is not installed in the OS then you can use below command to install python,
+
+apt-get install python3.8
+
+
 ## Usage
 
 To learn about different parameters, use help argument,

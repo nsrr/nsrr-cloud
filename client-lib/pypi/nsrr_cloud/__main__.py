@@ -6,12 +6,12 @@ import argparse
 
 # Global variables 
 VERSION_MAJOR='0'
-VERSION_MINOR='2'
-VERSION_PATCH='2'
+VERSION_MINOR='3'
+VERSION_PATCH='0'
 
 def main() -> None:
     desc_text="""This library provides access to Sleep resources hosted by NSRR
-                example usage: nsrr_cloud -d [--dataset=cfs] [--subject=cfs-visit5-800002] [--token-file=token.txt]
+                example usage: nsrr_cloud -d [--dataset=cfs] [--subject=800002] [--token-file=token.txt]
                                nsrr_cloud --dataset=cfs --list-subjects
                                nsrr_cloud --list-access [--token-file=token.txt]
               """
@@ -21,6 +21,8 @@ def main() -> None:
     parser.add_argument("--subject",help="argument to input subject name for download",type=str)
     parser.add_argument("--list-subjects",help="lists all the subjects in the dataset", action="store_true")
     parser.add_argument("--dataset",help="argument to input dataset name for download",type=str)
+    parser.add_argument("--list-files",help="lists all the files in the dataset", action="store_true")
+    parser.add_argument("--list-directories",help="lists all the directories in the dataset", action="store_true")
     parser.add_argument("--token-file",help="argument to input User token in a file")
     parser.add_argument("--list-access",help="lists all datasets with approved DUAU of a user", action="store_true")
     parser.add_argument("--force",help="argument to force re-download of requested files/dataset", action="store_true")
@@ -34,6 +36,12 @@ def main() -> None:
         return
     if args.dataset and args.list_subjects and len(sys.argv)==3:
         nsrr_cloud.list_all_subjects(args.dataset)
+        return
+    if args.dataset and args.list_files and len(sys.argv)==3:
+        nsrr_cloud.list_all_files(args.dataset)
+        return
+    if args.dataset and args.list_directories and len(sys.argv)==3:
+        nsrr_cloud.list_all_directories(args.dataset)
         return
     if args.list_access:
         if args.token_file and len(sys.argv)==3:

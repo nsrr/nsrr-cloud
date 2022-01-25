@@ -37,6 +37,7 @@ app.listen(process.env.PORT || 9002);
 console.log('Server up and running...');
 
 var datasets_list=[]
+var datasets_list_original=[]
 var metadata_list=[]
 var dataset_not_found_error=''
 fs.readFile('hosted_datasets.txt', 'utf8' , (err, data) => {
@@ -46,11 +47,12 @@ fs.readFile('hosted_datasets.txt', 'utf8' , (err, data) => {
     }
     metadata_list=data.split("\n")
     metadata_list.forEach(set => {
-        var set_row=set.split(",")
-        datasets_list.push(set_row[0])
+        var set_row=set.split("\t")
+        datasets_list.push(set_row[0].toLowerCase())
+        datasets_list_original.push(set_row[0])
     })
     dataset_not_found_error="Dataset was not found.\n"+
-                            "Did you mean one of: "+datasets_list.join(", ")
+                            "Did you mean one of: "+datasets_list_original.join(", ")
   })
 
   
@@ -138,6 +140,27 @@ const in_maintenance_window = () =>{
     })
 }
 
+function log_invalid_auth(ip,token,user_agent){
+    const add_invalid_auth_text='INSERT INTO public.invalid_auth( \
+                                    ip,token,user_agent)\
+                                    values($1,$2,$3);'
+    const add_invalid_auth_fn=async function(){
+        const client = await pool.connect()
+        try{
+            client.query(add_invalid_auth_text, [ip,token,user_agent],function(err,res){
+                if (res){
+                    console.log("logged invalid login attempt")
+                }
+            })
+        }catch(error){
+            console.log("Error in logging invalid auth in audit table")
+        }finally{
+            client.release();
+        }
+    }
+    add_invalid_auth_fn();
+}
+
 router.get('/auth-token',function(request, response,next){
     async function get_bearer_token(){
         try{
@@ -145,12 +168,14 @@ router.get('/auth-token',function(request, response,next){
             await is_valid_request(request).then(data => {
                 const requestor_ip = data
                 const sleepdata_user_token = request.headers.token
-                var dataset_name = request.query.dataset_name 
+                var dataset_name = request.query.dataset_name.toLowerCase()
                 if(!datasets_list.includes(dataset_name)){
                     throw new Error(dataset_not_found_error)
                 }
                 const user_token_split=sleepdata_user_token.split('-')
+                const user_agent=request.headers['user-agent']? request.headers['user-agent']: ""
                 if(user_token_split.length == 1){
+                    log_invalid_auth(requestor_ip,sleepdata_user_token,user_agent)
                     throw new Error("Invalid token")
                 }
                 const user_id=user_token_split[0]
@@ -203,7 +228,7 @@ router.get('/auth-token',function(request, response,next){
                                                         const token_audit_text='INSERT INTO public.bearer_token_audit( \
                                                             user_id, user_token, requested_dataset_slug, final_requested_dataset_slug, bearer_token,requestor_ip, created_at) \
                                                             VALUES ( $1, $2, $3,$4,$5,$6,$7);'
-                                                        client.query(token_audit_text, [user_id, user_token,request.query.dataset_name,dataset_name,b_token,requestor_ip,created_time],function(err,res){
+                                                        client.query(token_audit_text, [user_id, user_token,request.query.dataset_name.toLowerCase(),dataset_name,b_token,requestor_ip,created_time],function(err,res){
                                                             if (err){
                                                                 console.log("System Error in inserting into token audit table")
                                                             }
@@ -224,6 +249,7 @@ router.get('/auth-token',function(request, response,next){
                                 }
                                 else{
                                     console.log("Error Invalid Token")
+                                    log_invalid_auth(requestor_ip,sleepdata_user_token,user_agent)
                                     next(new Error("Invalid  Token"))
                                 }
                             }
@@ -280,7 +306,27 @@ router.get('/list/access',function(request, response,next){
                                     }
                                 });
                                 const uniq_datasets=[...new Set(datasets)];
-                                datasets_json["datasets"]=uniq_datasets
+                                //datasets_json["datasets"]=uniq_datasets
+                                var final_rows=[]
+                                metadata_list.forEach(set => {
+                                    const set_row=set.split("\t")
+                                    var arr=[]
+                                    arr.push(set_row[0])
+                                    arr.push(set_row[1])
+                                    arr.push(set_row[2])
+                                    if(set_row[3] == "open"){
+                                        arr.push("Open Access")
+                                    } else{
+                                        arr.push("Not Approved")
+                                        uniq_datasets.forEach(uniq_set => {
+                                            if(set_row[0].toLowerCase() == uniq_set){
+                                                arr[3]="Approved"
+                                            }
+                                        })
+                                    }
+                                    final_rows.push(arr)
+                                })
+                                datasets_json["datasets"]=final_rows
                                 response.status(200).send(datasets_json)
 
                             }
@@ -306,7 +352,7 @@ router.get('/list/access',function(request, response,next){
 
 
 router.get('/list/all-files',function(request, response, next){
-    var dataset_name= request.query.dataset_name;
+    var dataset_name= request.query.dataset_name.toLowerCase();
     try{
         if(!datasets_list.includes(dataset_name)){
             throw new Error(dataset_not_found_error)
@@ -325,7 +371,7 @@ router.get('/list/all-files',function(request, response, next){
 })
 
 router.get('/list/all-subjects', function(request, response, next){
-    var dataset_name= request.query.dataset_name;
+    var dataset_name= request.query.dataset_name.toLowerCase();
     try{
         if(!datasets_list.includes(dataset_name)){
             throw new Error(dataset_not_found_error)
@@ -348,7 +394,7 @@ router.get('/list/all-subjects', function(request, response, next){
 })
 
 router.get('/list/subject-files', function(request, response, next){
-    var dataset_name= request.query.dataset_name;
+    var dataset_name= request.query.dataset_name.toLowerCase();
     var subject=request.query.subject
     try{
         if(!datasets_list.includes(dataset_name)){
