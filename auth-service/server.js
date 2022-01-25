@@ -38,21 +38,30 @@ console.log('Server up and running...');
 
 var datasets_list=[]
 var datasets_list_original=[]
-var metadata_list=[]
 var dataset_not_found_error=''
 fs.readFile('hosted_datasets.txt', 'utf8' , (err, data) => {
+    var hosted_metadata_list;
     if (err) {
       console.error(err)
       return
     }
-    metadata_list=data.split("\n")
-    metadata_list.forEach(set => {
+    hosted_metadata_list=data.split("\n")
+    hosted_metadata_list.forEach(set => {
         var set_row=set.split("\t")
         datasets_list.push(set_row[0].toLowerCase())
         datasets_list_original.push(set_row[0])
     })
     dataset_not_found_error="Dataset was not found.\n"+
                             "Did you mean one of: "+datasets_list_original.join(", ")
+  })
+
+  var metadata_list=[]
+  fs.readFile('all_datasets.txt','utf8',(err,data) =>{
+    if (err) {
+        console.error(err)
+        return
+      }
+      metadata_list=data.split("\n")
   })
 
   

@@ -1,0 +1,22 @@
+ABC	Apnea, Bariatric surgery, and CPAP	https://sleepdata.org/datasets/abc	controlled
+BestAIR	Best Apnea Interventions in Research	https://sleepdata.org/datasets/bestair	controlled
+CCSHS	Cleveland Children's Sleep and Health Study	https://sleepdata.org/datasets/ccshs	controlled
+CFS	Cleveland Family Study	https://sleepdata.org/datasets/cfs	controlled
+CHAT	Childhood Adenotonsillectomy Trial	https://sleepdata.org/datasets/chat	controlled
+COXFELL2020	Cox & Fell (2020) Sleep Medicine Reviews	https://sleepdata.org/datasets/coxfell2020	open
+HAASSA	Honolulu-Asia Aging Study of Sleep Apnea	https://sleepdata.org/datasets/haassa	controlled
+HCHS	Hispanic Community Health Study/Study of Latinos	https://sleepdata.org/datasets/hchs	controlled
+HeartBEAT	Heart Biomarker Evaluation in Apnea Treatment	https://sleepdata.org/datasets/heartbeat	controlled
+HomePAP	Home Positive Airway Pressure	https://sleepdata.org/datasets/homepap	controlled
+Learn	Learn	https://sleepdata.org/datasets/learn	open
+MESA	Multi-Ethnic Study of Atherosclerosis	https://sleepdata.org/datasets/mesa	controlled	commercial
+MNC	Mignot Nature Communications	https://sleepdata.org/datasets/mnc	controlled
+MrOS	MrOS Sleep Study	https://sleepdata.org/datasets/mros	controlled
+NCHSDB	Nationwide Children's Sleep DataBank	https://sleepdata.org/datasets/nchsdb	controlled
+nuMom2b	Nulliparous Pregnancy Outcomes Study Monitoring Mothers-to-be	https://sleepdata.org/datasets/numom2b	controlled
+OYA	OneYear of Actigraphy	https://sleepdata.org/datasets/oya	controlled
+SHHS	Sleep Heart Health Study	https://sleepdata.org/datasets/shhs	controlled
+SOF	Study of Osteoporotic Fractures	https://sleepdata.org/datasets/sof	controlled
+STAGES	Stanford Technology Analytics and Genomics in Sleep	https://sleepdata.org/datasets/stages	controlled
+URBANPOOR	Urban Poor in India	https://sleepdata.org/datasets/urbanpoor	open
+WSC	Wisconsin Sleep Cohort	https://sleepdata.org/datasets/wsc	controlled
