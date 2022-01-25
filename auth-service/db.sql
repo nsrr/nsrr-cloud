@@ -95,6 +95,33 @@ ALTER TABLE public.controlled_file_audits ALTER COLUMN id ADD GENERATED ALWAYS A
     CACHE 1
 );
 
+--
+-- Name: invalid_auth; Type: TABLE; Schema: public; Owner: postgres_nsrr
+--
+
+CREATE TABLE public.invalid_auth (
+    id bigint NOT NULL,
+    ip character varying,
+    token character varying,
+    user_agent character varying
+);
+
+
+ALTER TABLE public.invalid_auth OWNER TO xxxxxxxx;
+
+--
+-- Name: invalid_auth_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres_nsrr
+--
+
+ALTER TABLE public.invalid_auth ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.invalid_auth_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    MAXVALUE 10000000000
+    CACHE 1
+);
+
 
 --
 -- Name: bearer_token_audit bearer_token_audit_pkey; Type: CONSTRAINT; Schema: public; Owner: xxxxxxxx
@@ -110,6 +137,14 @@ ALTER TABLE ONLY public.bearer_token_audit
 
 ALTER TABLE ONLY public.controlled_file_audits
     ADD CONSTRAINT dataset_file_audits_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: invalid_auth invalid_auth_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres_nsrr
+--
+
+ALTER TABLE ONLY public.invalid_auth
+    ADD CONSTRAINT invalid_auth_pkey PRIMARY KEY (id);
 
 
 --
