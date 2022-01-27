@@ -10,9 +10,9 @@ Single repository for Complete NSRR Cloud system:
 
 ## NSRR Cloud user guide
 
-Python Client library package is available at https://pypi.org/project/nsrr-cloud and can be installed using following command,
+Python Client library package is available at https://pypi.org/project/nsrr_cloud and can be installed using following command,
 
-`pip install nsrr-cloud`
+`pip install nsrr_cloud`
 
 ### Usage
 
@@ -20,7 +20,7 @@ To learn about different parameters, use help argument,
 
 `nsrr_cloud --help`
 
-To list the version of the nsrr-cloud library,
+To list the version of the nsrr_cloud library,
 
 `nsrr_cloud -v`
 
@@ -35,6 +35,22 @@ To list all the subjects of a specific dataset,
 To list approved datasets access of a user,
 
 `nsrr_cloud --list-access [--token-file=token.txt]`
+
+To list all the files of the dataset,
+
+`nsrr_cloud --dataset=cfs --list-files`
+
+To list all the directories of the dataset,
+
+`nsrr_cloud --dataset=cfs --list-directories`
+
+To download based on a folder or file path,
+
+```
+nsrr_cloud -d --dataset=cfs/forms
+nsrr_cloud -d --dataset=cfs/dataset/cfs-data-dictionary-0.5.0-variables.csv
+nsrr_cloud -d --dataset=cfs/polysomnography/annotations-events-nsrr
+```
 
 To download subject specific files from a dataset,
 

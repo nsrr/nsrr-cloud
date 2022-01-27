@@ -9,7 +9,7 @@ README = (HERE / "README.md").read_text()
 install_requires_list = (HERE / "requirements.txt").read_text(encoding='utf-8').split('\n')
 
 setup(
-    name="nsrr-cloud",
+    name="nsrr_cloud",
     version="0.3.0",
     description="Access Sleep resources from Sleepdata.org",
     long_description=README,

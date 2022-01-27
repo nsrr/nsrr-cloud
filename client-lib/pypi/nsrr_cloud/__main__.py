@@ -23,7 +23,7 @@ def main() -> None:
     parser.add_argument("--dataset",help="argument to input dataset name for download",type=str)
     parser.add_argument("--list-files",help="lists all the files in the dataset", action="store_true")
     parser.add_argument("--list-directories",help="lists all the directories in the dataset", action="store_true")
-    parser.add_argument("--token-file",help="argument to input User token in a file")
+    parser.add_argument("--token-file",help="argument to input user token in a file")
     parser.add_argument("--list-access",help="lists all datasets with approved DUAU of a user", action="store_true")
     parser.add_argument("--force",help="argument to force re-download of requested files/dataset", action="store_true")
     parser.add_argument("--no-md5",help="argument to use file size for file integrity check",action="store_true")
@@ -32,7 +32,7 @@ def main() -> None:
         print("Error: Invalid run command, use --help argument to learn more")
         raise SystemExit()
     if args.version and len(sys.argv)==2:
-        print("nsrr-cloud version "+VERSION_MAJOR+"."+VERSION_MINOR+"."+VERSION_PATCH)
+        print("nsrr_cloud version "+VERSION_MAJOR+"."+VERSION_MINOR+"."+VERSION_PATCH)
         return
     if args.dataset and args.list_subjects and len(sys.argv)==3:
         nsrr_cloud.list_all_subjects(args.dataset)
