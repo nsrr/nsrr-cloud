@@ -98,7 +98,7 @@ def download_file(url, download_file_name, no_md5, metadata):
                 delete_file_path.unlink()
                 return False
             else:
-                print("Downloaded file: ",download_file_name)   
+                print("Downloaded file: ",download_file_name,"  ",metadata["size"],"bytes")   
         else:
             md5_object = hashlib.md5()
             block_size = 128 * md5_object.block_size
@@ -114,10 +114,9 @@ def download_file(url, download_file_name, no_md5, metadata):
                 #delete_file_path.unlink()
                 return False
             else:
-                print("Downloaded file: ",download_file_name)
+                print("Downloaded file: ",download_file_name,"  ", metadata["size"],"bytes")
         return True
     except Exception as e:
-        print("exception is ",e)
         return False
 
 def get_all_files_list(dataset_name):
@@ -133,6 +132,7 @@ def get_all_files_list(dataset_name):
 
 
 def download_wrapper(all_files,user_token, dataset_name,download_path, force, no_md5):
+    all_download_size=0
     all_files=json.loads(all_files)
     for f in all_files["open_files"]:
         if not download_path in f:
@@ -140,13 +140,16 @@ def download_wrapper(all_files,user_token, dataset_name,download_path, force, no
         if not force:
             file_path=Path(str(Path.cwd())+"/"+f)
             if file_path.is_file():
-                print("Skipping download of existing file: {0}".format(f))
-                continue
+                if file_path.stat().st_size == all_files["open_files"][f]['size']:
+                    print("Skipping download of existing file: {0}".format(f))
+                    continue
         url=get_download_url(file_name=f)
         if(url):
             download_success=download_file(url,f,no_md5,all_files["open_files"][f])
             if not download_success:
                 print("ERROR: Unable to download file {0}".format(f))
+            else:
+                all_download_size+=all_files["open_files"][f]["size"]
         else:
             print("ERROR: Unable to get download URL for file {0}, try again later".format(f))
 
@@ -163,9 +166,10 @@ def download_wrapper(all_files,user_token, dataset_name,download_path, force, no
             if not force:
                 file_path=Path(str(Path.cwd())+"/"+f_with_dataset)
                 if file_path.is_file():
-                    print("Skipping download of existing file: {0}".format(f))
-                    controlled_files_count-=1
-                    continue
+                    if file_path.stat().st_size == all_files["controlled_files"][f]['size']:
+                        print("Skipping download of existing file: {0}".format(f))
+                        controlled_files_count-=1
+                        continue
             # get bearer token
             auth_token=get_auth_token(user_token, dataset_name)
             if(auth_token):
@@ -176,26 +180,31 @@ def download_wrapper(all_files,user_token, dataset_name,download_path, force, no
                         print("ERROR: Unable to download file {0}".format(f))
                     else:
                         controlled_files_count-=1
+                        all_download_size+=all_files["controlled_files"][f]["size"]
+
                 else:
                     print("ERROR: Unable to get download URL for file {0}, try again later".format(f))
             else:
                 print("ERROR: Unable to (re)download {0} controlled files as token verification failed, try again later".format(controlled_files_count))
                 break
-
+    if all_download_size != 0:
+        print("Total size of downloaded file(s) is ",all_download_size)
 
 def download_all_files(user_token, dataset_name, force, no_md5):
-    download_path=''
-    if "/" in dataset_name:
-        dataset_name_list=dataset_name.split("/")
-        dataset_name=dataset_name_list[0]
-        download_path='/'.join(dataset_name_list[1:])
-    all_files=get_all_files_list(dataset_name)
-    if(all_files):
-        download_wrapper(all_files,user_token, dataset_name, download_path, force, no_md5)
+    try:
+        download_path=''
+        if "/" in dataset_name:
+            dataset_name_list=dataset_name.split("/")
+            dataset_name=dataset_name_list[0]
+            download_path='/'.join(dataset_name_list[1:])
+        all_files=get_all_files_list(dataset_name)
+        if(all_files):
+            download_wrapper(all_files,user_token, dataset_name, download_path, force, no_md5)
 
-    else:
-        print("ERROR: Unable to retrieve files list of dataset {0}, check list of cloud hosted datasets and try again".format(dataset_name))
-
+        else:
+            print("ERROR: Unable to retrieve files list of dataset {0}, check list of cloud hosted datasets and try again".format(dataset_name))
+    except Exception as e:
+        print("ERROR: Unable to complete the download of files")
 
 def get_subject_files_list(dataset_name,subject):
     payload = {'dataset_name': dataset_name, 'subject': subject}
@@ -236,8 +245,12 @@ def list_all_subjects(dataset_name):
     except Exception as e:
         print("ERROR: Unable to process request at this time, try again later")
 
-def list_all_files(dataset_name):  
-    payload = {'dataset_name': dataset_name}
+def list_all_files(dataset_name):
+    download_path='' 
+    if "/" in dataset_name:
+        dataset_name_list=dataset_name.split("/")
+        dataset_name=dataset_name_list[0]
+        download_path='/'.join(dataset_name_list[1:])
     try:
         all_files=get_all_files_list(dataset_name)
         if not all_files:
@@ -247,13 +260,18 @@ def list_all_files(dataset_name):
         if(all_files):
             print_files=[]
             for f in all_files["open_files"]:
-                print_files.append("/".join(f.split("/")[1:]))
-            #print(*print_files,sep="\n")
-            #print(*all_files["controlled_files"],sep="\n")
+                if not download_path in f:
+                    continue
+                print_files.append(["/".join(f.split("/")[1:]),all_files["open_files"][f]["size"]])
             for f in all_files["controlled_files"]:
-                print_files.append(f)
-            print_files.sort()
-            print(*print_files,sep="\n")
+                if not download_path in f:
+                    continue
+                print_files.append([f,all_files["controlled_files"][f]["size"]])
+            print_files=sorted(print_files,key= lambda x:x[0])
+            
+            df=pd.DataFrame(print_files, columns=["File Name", "Size(Bytes)"])
+            
+            print(df.to_string(index=False))
     except Exception as e:
         print("ERROR: Unable to process request at this time, try again later")
 
@@ -270,15 +288,15 @@ def generate_nested_dirs(directories_list):
     except Exception as e:
         return False
 
-def print_tree_structure(nested_dirs_dict, indent):
+def print_tree_structure(nested_dirs_dict, indent, parent):
     try:
         for d in list(nested_dirs_dict):
             if indent == 0:
-                print(d)
+                print('{0: <50}{1}'.format(d,parent+"/"+d))
             else:
-                print('\t'*indent,'+--',d)
+                print('{0: <50}{1}'.format('    '*indent+'+--'+d,parent+"/"+d))
             if nested_dirs_dict[d]:
-                print_tree_structure(nested_dirs_dict[d], indent+1)
+                print_tree_structure(nested_dirs_dict[d], indent+1, parent+"/"+d)
         return True
     except Exception as e:
         return False
@@ -299,7 +317,7 @@ def list_all_directories(dataset_name):
             print_dirs=sorted(set(print_dirs))
             nested_dirs_dict=generate_nested_dirs(print_dirs)
             if nested_dirs_dict:
-                printed=print_tree_structure(nested_dirs_dict,0) 
+                printed=print_tree_structure(nested_dirs_dict,0,dataset_name) 
                 if not printed:
                     print("ERROR: Unable to show directory structure of dataset {0}, try again later".format(dataset_name))        
     except Exception as e:

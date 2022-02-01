@@ -1,14 +1,14 @@
-# nsrr-cloud
+# nsrr
 
-nsrr-cloud is a Python library to access NSRR Cloud resources.
+[nsrr](https://pypi.org/project/nsrr) - a python based Client library is available for users to access NSSR Cloud resources. This library is compatible with Mac, Linux and Windows (tested on win10 PowerShell with admin privileges).
 
 ## Installation
 
-`pip install nsrr-cloud`
+`pip install nsrr`
 
 If both version of python i.e., python2.x and python3.x are installed in the OS then you can use below command to call python3 based pip using,
 
-`pip3 install nsrr-cloud`
+`pip3 install nsrr`
 
 If python3 is not installed in the OS then you can use below command to install python,
 
@@ -19,39 +19,81 @@ apt-get install python3.8
 
 To learn about different parameters, use help argument,
 
-`nsrr_cloud --help`
-
-To list the version of the nsrr-cloud library,
-
-`nsrr_cloud -v`
-
-To download entire dataset,
-
-`nsrr_cloud -d [--dataset=cfs]`
-
-To list all the subjects of a specific dataset,
-
-`nsrr_cloud --dataset=cfs --list-subjects`
+```
+nsrr --help
+```
 
 To list approved datasets access of a user,
 
-`nsrr_cloud --list-access [--token-file=token.txt]`
+```
+nsrr --list-access
+```
+
+To list all the files of the dataset,
+
+```
+nsrr cfs --list-files
+```
+
+To list all the directories of the dataset,
+
+```
+nsrr cfs --list-directories
+```
+
+To download based on a folder or file path,
+
+```
+nsrr -d cfs/forms
+nsrr -d cfs/dataset/cfs-data-dictionary-0.5.0-variables.csv
+nsrr -d cfs/polysomnography/annotations-events-nsrr
+```
+
+To download entire dataset,
+
+```
+nsrr -d cfs
+```
+
+To list all the subjects of a specific dataset,
+
+```
+nsrr cfs --list-subjects
+```
 
 To download subject specific files from a dataset,
 
-`nsrr_cloud -d [--dataset=cfs] [--subject=cfs-visit5-800002]`
+```
+nsrr -d cfs --subject 800002
+```
 
 To provide password during command execution instead of interactive way,
 
-`nsrr_cloud -d [--dataset=cfs] [--token-file=token.txt]`
+```
+nsrr -d cfs --token-file token.txt
+```
 
-To skip memory intensive data-integrity (See notes) check,
+Data Integrity check is performed via the following two options.
+- (Recommended) md5 checksum value is unique to every file. This option verifies that the downloaded file is same as being served by NSRR using md5 checksum value comparison. 
+- file size check to match with download size of the file hosted by NSRR.
 
-`nsrr_cloud -d [--dataset=cfs]  --no-md5`
+To skip memory intensive data-integrity check,
+
+```
+nsrr cfs -d --no-md5
+```
 
 To forcefully download the whole dataset,
 
-`nsrr_cloud -d [--dataset=cfs]  --force`
+```
+nsrr -d cfs --force
+```
+
+To list the version of the nsrr-cloud library,
+
+```
+nsrr -v
+```
 
 
 ## Developer guide
@@ -63,7 +105,7 @@ Following installation are necessary to start development,
 
 ### Initialization
 
-Update Auth server address in the 'nsrr_cloud.py' file
+Update Auth server address in the 'nsrr.py' file
 
 ### Build and publish package
 
@@ -71,9 +113,9 @@ Delete any existing distributions in the dist folder,
 
 `rm -rf dist/*`
 
-Update setup.py, nsrr_cloud/__main__.py and nsrr_cloud/__init__.py to bump version number,
+Update setup.py, nsrr/__main__.py and nsrr/__init__.py to bump version number,
 ```
-ex: vi nsrr_cloud/__init__.py
+ex: vi nsrr/__init__.py
 __version__ = "x.x.x"
 ```
 Run build command,
