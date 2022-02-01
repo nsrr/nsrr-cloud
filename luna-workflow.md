@@ -64,7 +64,7 @@ It is generally a good practice to export the Sleep Analysis results to keep the
 - AWS Cloud Storage (S3) (Free data transfer within the same region)
 
 In this documentation, we are not planning to cover Data transfer between EC2 and S3 buckets. Here are couple of useful links in case you want to explore more,
-- [AWS CLI prerequisites](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-prereqs.html)
-- [Install AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
-- [AWS CLI configuration](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html)
-- [S3 reference](https://docs.aws.amazon.com/cli/latest/reference/s3/)
+- [AWS CLI prerequisites](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-prereqs.html){:target="_blank"}
+- [Install AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html){:target="_blank"}
+- [AWS CLI configuration](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html){:target="_blank"}
+- [S3 reference](https://docs.aws.amazon.com/cli/latest/reference/s3/){:target="_blank"}
