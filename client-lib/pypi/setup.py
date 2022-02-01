@@ -10,7 +10,7 @@ install_requires_list = (HERE / "requirements.txt").read_text(encoding='utf-8').
 
 setup(
     name="nsrr",
-    version="0.1.1",
+    version="0.1.2",
     description="Access Sleep research resources from Sleepdata.org",
     long_description=README,
     long_description_content_type="text/markdown",

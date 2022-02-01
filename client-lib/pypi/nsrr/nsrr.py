@@ -153,14 +153,18 @@ def download_wrapper(all_files,user_token, dataset_name,download_path, force, no
         else:
             print("ERROR: Unable to get download URL for file {0}, try again later".format(f))
 
-    if not user_token:
-        print("Error: Input token is empty, skipping controlled file(s) download")
-        return
     if(all_files["controlled_files"]):
+        if "/" in download_path:
+            download_path="/".join(download_path.split("/")[1:])
         for f in list(all_files["controlled_files"]):
             if not download_path in f:
                 del all_files["controlled_files"][f]
         controlled_files_count=len(all_files["controlled_files"])
+        if controlled_files_count == 0:
+            return
+        if not user_token:
+            print("Error: Input token is empty, skipping {0} controlled file(s) download".format(controlled_files_count))
+            return
         for f in all_files["controlled_files"]:
             f_with_dataset=dataset_name+"/"+f
             if not force:
@@ -188,15 +192,14 @@ def download_wrapper(all_files,user_token, dataset_name,download_path, force, no
                 print("ERROR: Unable to (re)download {0} controlled files as token verification failed, try again later".format(controlled_files_count))
                 break
     if all_download_size != 0:
-        print("Total size of downloaded file(s) is ",all_download_size)
+        print("Total size of downloaded file(s) is ",all_download_size, "bytes")
 
 def download_all_files(user_token, dataset_name, force, no_md5):
     try:
         download_path=''
         if "/" in dataset_name:
-            dataset_name_list=dataset_name.split("/")
-            dataset_name=dataset_name_list[0]
-            download_path='/'.join(dataset_name_list[1:])
+            download_path=dataset_name
+            dataset_name=dataset_name.split("/")[0]
         all_files=get_all_files_list(dataset_name)
         if(all_files):
             download_wrapper(all_files,user_token, dataset_name, download_path, force, no_md5)
@@ -220,9 +223,8 @@ def get_subject_files_list(dataset_name,subject):
 def download_subject_files(user_token,dataset_name,subject, force, no_md5):
     download_path=''
     if "/" in dataset_name:
-        dataset_name_list=dataset_name.split("/")
-        dataset_name=dataset_name_list[0]
-        download_path='/'.join(dataset_name_list[1:])
+            download_path=dataset_name
+            dataset_name=dataset_name.split("/")[0]
     all_files=get_subject_files_list(dataset_name,subject)
     if(all_files):
         download_wrapper(all_files,user_token, dataset_name, download_path, force, no_md5)
@@ -248,9 +250,8 @@ def list_all_subjects(dataset_name):
 def list_all_files(dataset_name):
     download_path='' 
     if "/" in dataset_name:
-        dataset_name_list=dataset_name.split("/")
-        dataset_name=dataset_name_list[0]
-        download_path='/'.join(dataset_name_list[1:])
+        download_path=dataset_name
+        dataset_name=dataset_name.split("/")[0]
     try:
         all_files=get_all_files_list(dataset_name)
         if not all_files:
@@ -264,6 +265,8 @@ def list_all_files(dataset_name):
                     continue
                 print_files.append(["/".join(f.split("/")[1:]),all_files["open_files"][f]["size"]])
             for f in all_files["controlled_files"]:
+                if "/" in dataset_name:
+                    download_path='/'.join(dataset_name.split("/")[1:])
                 if not download_path in f:
                     continue
                 print_files.append([f,all_files["controlled_files"][f]["size"]])
