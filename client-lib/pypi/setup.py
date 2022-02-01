@@ -14,7 +14,7 @@ setup(
     description="Access Sleep research resources from Sleepdata.org",
     long_description=README,
     long_description_content_type="text/markdown",
-    url="https://github.com/nsrr/nsrr-cloud/client-lib/pypi/nsrr",
+    url="https://github.com/nsrr/nsrr-cloud/tree/master/client-lib/pypi",
     author="Shyamal",
     author_email="sagarwal12@bwh.harvard.edu",
     license="MIT",
