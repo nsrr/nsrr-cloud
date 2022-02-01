@@ -94,7 +94,7 @@ nsrr cfs -d --subject 800002
 Above command will download file specific to subject 800002. Now we will apply our above matlab functions to read the files,
 
 ```
-matlab -nodisplay -batch  "edfread($example.edf,$data)" -sd folder -logfile output.log
+matlab -nodisplay -batch  "edfread($cfs/polysomnography/edfs/cfs-visit5-800002.edf,$data)" -sd folder -logfile output.log
 ```
 
 `insert your analysis code here`

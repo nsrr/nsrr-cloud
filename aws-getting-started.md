@@ -162,4 +162,11 @@ Upon successful ssh,
 ![](./images/ec2-login.png)
 
 
+Now you can run sudo command to login as root user and go to home directory of root user,
+
+```
+sudo su
+cd
+```
+
 You have now successfully completed launching and logging into the EC2 instance
