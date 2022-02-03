@@ -85,7 +85,7 @@ In this page, you can see various types of EC2 instance configurations. Select t
 
 The default selected is t2.micro instance which is free tier eligible, we recommend new users to continue with default instance to help them get comfortable before choosing more powerful EC2 instances.
 
-Note: t2.micro instance may not be powerful enough for running Sleep Analysis tools. 
+Note: t2.micro instance may not be powerful enough for running sleep analysis tools. 
 
 After the instance is selected, Click on Configure Instance Details.
 

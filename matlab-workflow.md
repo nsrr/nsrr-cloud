@@ -1,12 +1,12 @@
 ---
 layout: default
-title: Sleep Analysis workflow using Matlab
+title: Sleep analysis workflow using Matlab
 description: Example workflow 1
 ---
 
 [Back to NSRR Cloud](./index.md)
 
-# Sleep Analysis workflow using Matlab
+# Sleep analysis workflow using Matlab
 
 
 ## Prerequisite:
@@ -80,18 +80,19 @@ where,
 
 ## Workflow
 
-Check all subjects of CFS dataset
+List all subjects of CFS dataset:
+
 ```
 nsrr cfs --list-subjects
 ```
 
-Now download files specific to single subject and perform the analysis,
+Now download files specific to single subject and perform the analysis:
 
 ```
 nsrr cfs -d --subject 800002
 ```
 
-Above command will download file specific to subject 800002. Now we will apply our above matlab functions to read the files,
+Above command will download file specific to subject 800002. Now we will apply our above matlab functions to read the files:
 
 ```
 matlab -nodisplay -batch  "edfread($cfs/polysomnography/edfs/cfs-visit5-800002.edf,$data)" -sd folder -logfile output.log
@@ -99,7 +100,7 @@ matlab -nodisplay -batch  "edfread($cfs/polysomnography/edfs/cfs-visit5-800002.e
 
 `insert your analysis code here`
 
-Once your Sleep Analysis processing is completed, you can delete the files of subject 800002 and save your results.
+Once your sleep analysis processing is completed, you can delete the files of subject 800002 and save your results.
 
 Similarly, we can loop over each subject of CFS dataset and perform the above analysis.
 
@@ -109,7 +110,7 @@ If bash scripting is easier for you then you can bundle up the above commands in
 
 ## Export results
 
-It is generally a good practice to export the Sleep Analysis results to keep the EC2 instance storage size in limit and to safeguard against any type of accidental loss of information from the EC2 instance. Some of the export options include,
+It is generally a good practice to export the sleep analysis results to keep the EC2 instance storage size in limit and to safeguard against any type of accidental loss of information from the EC2 instance. Some of the export options include,
 
 - Your local machine (Data transfer cost is applicable)
 - AWS Cloud Storage (S3) (Free data transfer within the same region)
