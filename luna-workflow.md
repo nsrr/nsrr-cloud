@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Sleep analysis workflow using Luna
-description: Example workflow 2
+description: sample workflow
 ---
 
 [Back to NSRR Cloud](./index.md)
@@ -16,6 +16,8 @@ Luna is a very well-documented tool and it is recommend to visit [Luna Documenta
 
 
 ## Workflow
+
+This section of the documentation covers usage of 'CFS' dataset as an example.
 
 List all the subjects of CFS dataset:
 
@@ -52,19 +54,19 @@ If bash scripting is easier for you then you can bundle up the above commands in
 
 ## NSRR Automated Pipeline
 
-NSRR team has also created [NAP](https://gitlab-scm.partners.org/zzz-public/nsrr){:target="_blank"} which internally utilizes the Luna tool to perform a multitude of Analysis operations in bulk manner.
+The NSRR team has also created [NAP](https://gitlab-scm.partners.org/zzz-public/nsrr){:target="_blank"} which internally utilizes the Luna tool to perform a multitude of Analysis operations in a bulk manner.
 
 For collaboration/contribution to NAP, feel free to contact us at support@sleepdata.org
 
 
 ## Export results
 
-It is generally a good practice to export the sleep analysis results to keep the EC2 instance storage size in check and to safeguard against any type of accidental loss of information from the EC2 instance. Some of the export options include,
+It is generally a good practice to export the sleep analysis results to keep the EC2 instance storage size in check and to safeguard against any type of accidental loss of information from the EC2 instance. Some of the export options include:
 
 - Your local machine (Data transfer cost is applicable)
 - AWS Cloud Storage (S3) (Free data transfer within the same region)
 
-In this documentation, we are not planning to cover Data transfer between EC2 and S3 buckets. Below are couple of useful links in case you want to explore more,
+In this documentation, we are not planning to cover Data transfer between EC2 and S3 buckets. Below are couple of useful links in case you want to explore more:
 - [AWS CLI prerequisites](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-prereqs.html){:target="_blank"}
 - [Install AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html){:target="_blank"}
 - [AWS CLI configuration](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html){:target="_blank"}

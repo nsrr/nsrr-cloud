@@ -130,7 +130,7 @@ nsrr -v
 
 Our team has documented below example workflows for sleep researchers to optimally utilize Cloud resources,
 
-[Analysis using Matlab](./matlab-workflow.md)
+[Analysis using MATLAB](./matlab-workflow.md)
 
 [Analysis using Luna](./luna-workflow.md)
 

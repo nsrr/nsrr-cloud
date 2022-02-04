@@ -51,8 +51,9 @@ Now you should've successfully signed up for AWS account.
 
 To log in to the AWS account visit [AWS portal](https://console.aws.amazon.com){:target="_blank"}. Choose the option to login with root email and enter login credentials used during sign up process
 
-Once you have successfully signed in, you will be redirected to AWS home page. 
+Once you have successfully signed in, you will be redirected to AWS home page.
 
+In the home page, make sure to change the region (top-right corner) to N. Virginia (us-east-1).
 
 ![](./images/aws-login-1.png)
  
@@ -120,13 +121,7 @@ In the final step, you will be asked to create new a key pair (if there is none 
 
 Enter Key pair name (example) and let the default Key pair type as RSA. Now Click on Download Key Pair. The downloaded key would be example.pem
 
-In your local, change the permissions of the downloaded Key Pair PEM file to 700,
-
-```
-chmod 700 example.pem 
-```
 And make sure to keep a copy of this PEM file safe for recovery from accidental deletion. In case the PEM file is lost, there is no other way of logging in to the EC2 instance(s) created using the PEM file.
-
 
 ![](./images/ec2-new-5.png)
 
@@ -146,27 +141,31 @@ You will be redirected to the EC2 dashboard page. Here you can see the newly cre
 
 In general, it will take about a minute or two for the EC2 instance to be up and running after successful launch.
 
-To login to your newly created EC2 instance, go to the EC2 dashboard page and select Instances from the Left side bar.
+To login to your newly created EC2 instance, go to the EC2 dashboard page and perform the following:
 
-Select on the newly created instance ID and copy the 'Public IPv4 address'. This is the IP address that we are going to use to SSH into the EC2 instance.
+- Select Instances from the left side bar.
+- Select the newly created instance.
+- Click on 'connect' button from the menu above. 
+- Click on 'SSH Client'
 
+![](./images/ec2-login-1.png)
 
-Run below command to SSH into the EC2 instance,
+Follow the instructions from this webpage to login. 
 
-```
-ssh -i example.pem ubuntu@copied.ipv4.address
-```
-
-Upon successful ssh,
-
-![](./images/ec2-login.png)
+Additionally, for Windows users, we recommend using the AWS documentation - [Connect to your Linux instance from Windows using PuTTY](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/putty.html).
 
 
-Now you can run sudo command to login as root user and go to home directory of root user,
+
+Upon successful login into EC2 instance, your SSH Client may look like:
+
+![](./images/ec2-login-2.png)
+
+
+Now you can run sudo command to login as root user and go to home directory of root user:
 
 ```
 sudo su
 cd
 ```
 
-You have now successfully completed launching and logging into the EC2 instance
+You have now successfully completed launching and logging into the EC2 instance.

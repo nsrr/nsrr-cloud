@@ -1,13 +1,13 @@
 ---
 layout: default
 title: Install Python
-description: on windows, mac and linux systems
+description: on Windows, Mac and Linux systems
 ---
 [Back to NSRR Cloud](./index.md)
 
 [Install Python3.8 in Windows](#install-python38-in-windows)
 
-[Install Python3.9 in mac](#install-python398-in-mac)
+[Install Python3.9 in Mac](#install-python398-in-mac)
 
 [Install Python3.9 in Linux](#install-python39-in-linux)
 
@@ -40,7 +40,7 @@ Setup progress will be indicated in the installer.
 ![](./images/windows-4.png)
 
 
-Finally an installation success message will show on successful installation.
+Finally an installation success message will show upon successful installation.
 
 ![](./images/windows-5.png)
 
