@@ -14,6 +14,8 @@ Luna is an open-source C/C++ software package for manipulating and analyzing pol
 
 Luna is a very well-documented tool and it is recommend to visit [Luna Documentation](https://zzz.bwh.harvard.edu/luna){:target="_blank"} website to learn in detail about installation and different commands for sleep EEG analysis. 
 
+For Luna quick start, we **recommend** [Luna Docker](https://zzz.bwh.harvard.edu/luna/download/docker){:target="_blank"} version.
+
 
 ## Workflow
 

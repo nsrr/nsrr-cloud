@@ -80,7 +80,7 @@ nsrr -d cfs/dataset/cfs-data-dictionary-0.5.0-variables.csv
 nsrr -d cfs/polysomnography/annotations-events-nsrr
 ```
 
-To download entire dataset,
+To download entire dataset:
 
 ```
 nsrr -d cfs
@@ -92,7 +92,7 @@ To list all the subjects of a specific dataset:
 nsrr cfs --list-subjects
 ```
 
-To download subject specific files from a dataset:
+To download subject-specific files from a dataset:
 
 ```
 nsrr -d cfs --subject 800002
