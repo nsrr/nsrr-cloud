@@ -31,7 +31,7 @@ NSRR Cloud datasets are hosted in us-east-1 region. We **strongly recommend** th
 One of the prerequisites for accessing NSRR Cloud resources is to have Python3 available in the OS. If you don't have Python version 3 installed, then follow the [Python3 installation](./install-python.md) guide.
 
 
-[nsrr](https://pypi.org/project/nsrr){:target="_blank"} - a Python-based Client library is available for users to access NSSR Cloud resources. This library is compatible with Mac, Linux and Windows (tested on win10 PowerShell with admin privileges).
+[nsrr](https://pypi.org/project/nsrr){:target="_blank"} - a Python-based Client library is available for users to access NSRR Cloud resources. This library is compatible with Mac, Linux and Windows (tested on win10 PowerShell with admin privileges).
 
 Run the command below to install nsrr library:
 
