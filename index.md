@@ -1,6 +1,6 @@
 # NSRR Cloud
 
-Over the past decade, we have been experiencing a gradual increase in adoption of Cloud usage in the Healthcare, Research and IT industries. One of the main benefits of Cloud is on-demand, wide-variety of scalable IT resources that users can access at their fingertips. 
+Over the past decade, we have been experiencing an increase in adoption of Cloud usage in the Healthcare, Research and IT industries. One of the main benefits of Cloud is on-demand, wide-variety of scalable IT resources that users can access at their fingertips. 
 
 NSRR traditionally serves sleep researchers with resources using On-premises hosting services. For sleep researchers to fully realize potential of IT Cloud services, we are migrating our sleep research resources to Cloud-based hosting solution. Listed below are the potential benefits of NSRR Cloud:
 - Users can skip maintaining individual copies of sleep studies; Users can access files to perform analysis and delete them as needed
