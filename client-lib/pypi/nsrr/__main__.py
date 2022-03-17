@@ -5,8 +5,8 @@ import argparse
 
 
 VERSION_MAJOR='0'
-VERSION_MINOR='1'
-VERSION_PATCH='2'
+VERSION_MINOR='2'
+VERSION_PATCH='0'
 
 def main() -> None:
 
@@ -33,6 +33,7 @@ def main() -> None:
         parser.add_argument("-t","--token-file",help="input user token in a file")
         parser.add_argument("--force",help="force re-download of the requested files", action="store_true")
         parser.add_argument("--no-md5",help="use file size for file download integrity check",action="store_true")
+        parser.add_argument("--decompress", help="decompress and delete original compressed EDFZ file(s)", action="store_true")
         parser.add_argument("-v", "--version", help="list the current version of the library", action="store_true")
         parser.add_argument("-h", "--help", help="list all command options of the library", action="help")
 
@@ -42,7 +43,7 @@ def main() -> None:
 
         args=parser.parse_args()
 
-        if not len(sys.argv) < 10: 
+        if not len(sys.argv) < 11: 
             print("Error: Invalid run command, use --help argument to learn more")
             raise SystemExit()
         if args.version and len(sys.argv)==2:
@@ -79,6 +80,8 @@ def main() -> None:
                 allowed_arguments+=1
             if args.no_md5:
                 allowed_arguments+=1
+            if args.decompress:
+                allowed_arguments+=1
             if args.token_file:
                 for arg in sys.argv:
                     if '-t' in arg and not '=' in arg:
@@ -93,11 +96,11 @@ def main() -> None:
                         allowed_arguments+=1
                 allowed_arguments+=1
                 if(len(sys.argv) == allowed_arguments):
-                    nsrr.download_subject_files(user_token, args.dataset, args.subject, args.force, args.no_md5)
+                    nsrr.download_subject_files(user_token, args.dataset, args.subject, args.force, args.no_md5, args.decompress)
                     return
             else:
                 if(len(sys.argv) == allowed_arguments):
-                    nsrr.download_all_files(user_token, args.dataset, args.force, args.no_md5)
+                    nsrr.download_all_files(user_token, args.dataset, args.force, args.no_md5, args.decompress)
                     return
         print("Error: Invalid run command, use --help argument to learn more")
     except KeyboardInterrupt as e:

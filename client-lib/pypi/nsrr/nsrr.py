@@ -6,11 +6,16 @@ import getpass
 from pathlib import Path 
 import hashlib
 import pandas as pd
+import gzip
+from multiprocessing import Process
 
 # Global variables 
 #API_SERVER='https://dev-cloud.sleepdata.org/api/v1'
 API_SERVER='https://cloud.sleepdata.org/api/v1'
 #API_SERVER='http://localhost:9002/api/v1'
+procs=[]
+all_decompress_edfz=[]
+
 
 def get_input_token():
     enter_pass_text="""
@@ -76,10 +81,14 @@ def get_download_url(auth_token=None, file_name=None):
         return False
 
 
-def download_file(url, download_file_name, no_md5, metadata):
+def download_file(url, download_file_name, no_md5,decompress, metadata):
+    global procs, all_decompress_edfz
     try:
         file_name_split=download_file_name.split("/")
         file_name=file_name_split[-1]
+        if(decompress and file_name.split(".")[-1]=='idx'):
+            print("Skipping download of file: ",download_file_name)
+            return True
         file_download_path="/".join(file_name_split[:-1])
         path = Path(str(Path.cwd())+"/"+file_download_path)
         if not path.exists():
@@ -115,6 +124,12 @@ def download_file(url, download_file_name, no_md5, metadata):
                 return False
             else:
                 print("Downloaded file: ",download_file_name,"  ", metadata["size"],"bytes")
+        # call decompress fn
+        if(decompress and file_name.split(".")[-1]=="edfz"):
+            decompress_proc = Process(target=decompress_edf, args=(download_file_name,))
+            decompress_proc.start()
+            procs.append(decompress_proc)
+            all_decompress_edfz.append({"name": f_download, "size":f_download.stat().st_size})
         return True
     except Exception as e:
         return False
@@ -131,25 +146,35 @@ def get_all_files_list(dataset_name):
         return False
 
 
-def download_wrapper(all_files,user_token, dataset_name,download_path, force, no_md5):
+def download_wrapper(all_files,user_token, dataset_name,download_path, force, no_md5, decompress):
+    if(decompress):
+        global procs, all_decompress_edfz
     all_download_size=0
     all_files=json.loads(all_files)
     for f in all_files["open_files"]:
         if not download_path in f:
             continue
         if not force:
-            file_path=Path(str(Path.cwd())+"/"+f)
-            if file_path.is_file():
-                if file_path.stat().st_size == all_files["open_files"][f]['size']:
+            file_path=""
+            if decompress and f.split(".")[-1]=="edfz":
+                file_path=Path(str(Path.cwd())+"/"+".".join(f.split(".")[:-1])+".edf")
+                if file_path.is_file():
                     print("Skipping download of existing file: {0}".format(f))
                     continue
+            else:
+                file_path=Path(str(Path.cwd())+"/"+f)
+                if file_path.is_file():
+                    if file_path.stat().st_size == all_files["open_files"][f]['size']:
+                        print("Skipping download of existing file: {0}".format(f))
+                        continue
         url=get_download_url(file_name=f)
         if(url):
-            download_success=download_file(url,f,no_md5,all_files["open_files"][f])
+            download_success=download_file(url,f,no_md5,decompress,all_files["open_files"][f])
             if not download_success:
                 print("ERROR: Unable to download file {0}".format(f))
             else:
-                all_download_size+=all_files["open_files"][f]["size"]
+                if not (decompress and f.split(".")[-1] == ".idx" ):
+                    all_download_size+=all_files["open_files"][f]["size"]
         else:
             print("ERROR: Unable to get download URL for file {0}, try again later".format(f))
 
@@ -161,40 +186,65 @@ def download_wrapper(all_files,user_token, dataset_name,download_path, force, no
                 del all_files["controlled_files"][f]
         controlled_files_count=len(all_files["controlled_files"])
         if controlled_files_count == 0:
+            if all_download_size != 0:
+                print("Total size of downloaded file(s) is ",all_download_size, "bytes")
             return
         if not user_token:
             print("Error: Input token is empty, skipping {0} controlled file(s) download".format(controlled_files_count))
+            if all_download_size != 0:
+                print("Total size of downloaded file(s) is ",all_download_size, "bytes")
             return
         for f in all_files["controlled_files"]:
             f_with_dataset=dataset_name+"/"+f
             if not force:
-                file_path=Path(str(Path.cwd())+"/"+f_with_dataset)
-                if file_path.is_file():
-                    if file_path.stat().st_size == all_files["controlled_files"][f]['size']:
+                file_path=""
+                if decompress and f_with_dataset.split(".")[-1]=="edfz":
+                    file_path=Path(str(Path.cwd())+"/"+".".join(f_with_dataset.split(".")[:-1])+".edf")
+                    if file_path.is_file():
                         print("Skipping download of existing file: {0}".format(f))
                         controlled_files_count-=1
                         continue
+                else:
+                    file_path=Path(str(Path.cwd())+"/"+f_with_dataset)
+                    if file_path.is_file():
+                        if file_path.stat().st_size == all_files["controlled_files"][f]['size']:
+                            print("Skipping download of existing file: {0}".format(f))
+                            controlled_files_count-=1
+                            continue
             # get bearer token
             auth_token=get_auth_token(user_token, dataset_name)
             if(auth_token):
                 url=get_download_url(auth_token=auth_token,file_name=f)
                 if(url):
-                    download_success=download_file(url,f_with_dataset,no_md5,all_files["controlled_files"][f])
+                    download_success=download_file(url,f_with_dataset,no_md5,decompress,all_files["controlled_files"][f])
                     if not download_success:
                         print("ERROR: Unable to download file {0}".format(f))
                     else:
                         controlled_files_count-=1
-                        all_download_size+=all_files["controlled_files"][f]["size"]
-
+                        if not (decompress and f.split(".")[-1] == ".idx"):
+                            all_download_size+=all_files["controlled_files"][f]["size"]
                 else:
                     print("ERROR: Unable to get download URL for file {0}, try again later".format(f))
             else:
                 print("ERROR: Unable to (re)download {0} controlled files as token verification failed, try again later".format(controlled_files_count))
                 break
+    sum_=0
+    try:
+        if decompress:
+            for proc in procs:
+                proc.join()
+            for f in all_decompress_edfz:
+                sum_+=Path('.'.join(str(f["name"]).split(".")[:-1])+".edf").stat().st_size -f["size"]
+    except Exception as e:
+        print("ERROR: Calculation failed for additional space used by decompressed files")
+        return
+    
     if all_download_size != 0:
         print("Total size of downloaded file(s) is ",all_download_size, "bytes")
+    if sum_ !=0:
+        print("Total additional space consumed by decompression is ", sum_, "bytes")
 
-def download_all_files(user_token, dataset_name, force, no_md5):
+def download_all_files(user_token, dataset_name, force, no_md5, decompress):
     try:
         download_path=''
         if "/" in dataset_name:
@@ -202,7 +252,7 @@ def download_all_files(user_token, dataset_name, force, no_md5):
             dataset_name=dataset_name.split("/")[0]
         all_files=get_all_files_list(dataset_name)
         if(all_files):
-            download_wrapper(all_files,user_token, dataset_name, download_path, force, no_md5)
+            download_wrapper(all_files,user_token, dataset_name, download_path, force, no_md5, decompress)
 
         else:
             print("ERROR: Unable to retrieve files list of dataset {0}, check list of cloud hosted datasets and try again".format(dataset_name))
@@ -220,14 +270,14 @@ def get_subject_files_list(dataset_name,subject):
     except Exception as e:
         return False
 
-def download_subject_files(user_token,dataset_name,subject, force, no_md5):
+def download_subject_files(user_token,dataset_name,subject, force, no_md5, decompress):
     download_path=''
     if "/" in dataset_name:
             download_path=dataset_name
             dataset_name=dataset_name.split("/")[0]
     all_files=get_subject_files_list(dataset_name,subject)
     if(all_files):
-        download_wrapper(all_files,user_token, dataset_name, download_path, force, no_md5)
+        download_wrapper(all_files,user_token, dataset_name, download_path, force, no_md5, decompress)
     else:
         print("ERROR: Unable to retrieve files list of subject {0} of dataset {1}, check list of cloud hosted datasets and try again".format(subject,dataset_name))
 
@@ -325,3 +375,17 @@ def list_all_directories(dataset_name):
                     print("ERROR: Unable to show directory structure of dataset {0}, try again later".format(dataset_name))        
     except Exception as e:
         print("ERROR: Unable to process request at this time, try again later")
+
+def decompress_edf(edfz_file_name):
+    full_edfz_file_name = Path(str(Path.cwd())+"/"+edfz_file_name)
+    try:
+        edf_data=''
+        with gzip.open(full_edfz_file_name, 'rb') as f:
+            edf_data = f.read()
+        edf_to_write=Path(''.join(str(full_edfz_file_name).split(".")[:-1])+".edf")
+        with open(edf_to_write,'wb') as f:
+            f.write(edf_data)
+        full_edfz_file_name.unlink()
+        print("Decompressed file: ",edfz_file_name, "to",'.'.join(edfz_file_name.split(".")[:-1])+".edf","and deleted original")
+    except Exception as e:
+        print("ERROR: Unable to decompress EDFZ file: ",edfz_file_name)
