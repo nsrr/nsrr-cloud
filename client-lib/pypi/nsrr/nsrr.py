@@ -314,17 +314,19 @@ def list_all_files(dataset_name):
                 if not download_path in f:
                     continue
                 print_files.append(["/".join(f.split("/")[1:]),all_files["open_files"][f]["size"]])
+            if download_path:
+                download_path='/'.join(download_path.split("/")[1:])
             for f in all_files["controlled_files"]:
-                if "/" in dataset_name:
-                    download_path='/'.join(dataset_name.split("/")[1:])
                 if not download_path in f:
                     continue
                 print_files.append([f,all_files["controlled_files"][f]["size"]])
             print_files=sorted(print_files,key= lambda x:x[0])
             
             df=pd.DataFrame(print_files, columns=["File Name", "Size(Bytes)"])
-            
-            print(df.to_string(index=False))
+            if df.empty:
+                print("ERROR: No files found for given input dataset (path): ",dataset_name+"/"+download_path)
+            else:
+                print(df.to_string(index=False))
     except Exception as e:
         print("ERROR: Unable to process request at this time, try again later")
 

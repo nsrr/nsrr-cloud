@@ -55,6 +55,13 @@ To download entire dataset:
 nsrr -d cfs
 ```
 
+To decompress EDFZ files into EDF files, and delete the compressed originals:
+
+```
+nsrr -d cfs --decompress
+```
+To learn more about EDFZ file format, visit [EDFZ: working with compressed EDFs](https://zzz.bwh.harvard.edu/luna/vignettes/edfz/){:target="_blank"}.
+
 To list all the subjects of a specific dataset:
 
 ```
