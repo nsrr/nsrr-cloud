@@ -17,7 +17,7 @@ def main() -> None:
             nsrr cfs/polysomnography/edfs --list-files
             nsrr cfs --list-directories
             nsrr cfs --list-subjects
-            nsrr cfs -d --subject 800002
+            nsrr cfs -d --subject 800002 --decompress
             nsrr -d cfs/forms 
             nsrr -d cfs --force"""
     try:
