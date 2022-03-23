@@ -1,6 +1,6 @@
 # NSRR Cloud
 
-Over the past decade, we have been experiencing a gradual increase in adoption of Cloud usage in the Healthcare, Research and IT industries. One of the main benefits of Cloud is on-demand, wide-variety of scalable IT resources that users can access at their fingertips. 
+Over the past decade, we have been experiencing an increase in adoption of Cloud usage in the Healthcare, Research and IT industries. One of the main benefits of Cloud is on-demand, wide-variety of scalable IT resources that users can access at their fingertips. 
 
 NSRR traditionally serves sleep researchers with resources using On-premises hosting services. For sleep researchers to fully realize potential of IT Cloud services, we are migrating our sleep research resources to Cloud-based hosting solution. Listed below are the potential benefits of NSRR Cloud:
 - Users can skip maintaining individual copies of sleep studies; Users can access files to perform analysis and delete them as needed
@@ -31,7 +31,7 @@ NSRR Cloud datasets are hosted in us-east-1 region. We **strongly recommend** th
 One of the prerequisites for accessing NSRR Cloud resources is to have Python3 available in the OS. If you don't have Python version 3 installed, then follow the [Python3 installation](./install-python.md) guide.
 
 
-[nsrr](https://pypi.org/project/nsrr){:target="_blank"} - a Python-based Client library is available for users to access NSSR Cloud resources. This library is compatible with Mac, Linux and Windows (tested on win10 PowerShell with admin privileges).
+[nsrr](https://pypi.org/project/nsrr){:target="_blank"} - a Python-based Client library is available for users to access NSRR Cloud resources. This library is compatible with Mac, Linux and Windows (tested on win10 PowerShell with admin privileges).
 
 Run the command below to install nsrr library:
 
