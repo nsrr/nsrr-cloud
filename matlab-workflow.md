@@ -32,7 +32,7 @@ nsrr cfs --list-subjects
 Now, download files specific to a single subject and perform the analysis:
 
 ```
-nsrr cfs -d --subject 800002
+nsrr cfs -d --subject 800002 --decompress
 ```
 
 The command above will download file specific to subject 800002. Now, apply MATLAB (R2020b) function to read the EDF file:
