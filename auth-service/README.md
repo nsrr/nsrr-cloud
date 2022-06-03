@@ -42,11 +42,18 @@ Use the scripts in 'auth_data_transfer' folder (specific  to MGB server, update 
 
 ### Run scripts
 
-Run the script 'get_s3_files_list.js' to get metadata of hosted datasets from S3 buckets,
+Update hosted_datasets.txt file before updating the server with added/deleted dataset from the S3 bucket(s).
+
+
+Run the script 'get_s3_files_list.js' to get metadata of hosted datasets from S3 buckets:
 
 `ex: node get_s3_files_list.js cfs`
 
 Repeat the above command per dataset. Also, you will have to run the above command everytime any new file are added or deleted from a dataset.
+
+Then, create a file with the format 'x_all_subjects.txt' where x stands for dataset_name. This file will be used to help with subject level file download. Now, run below command to create subject level download info for the given dataset:
+
+`ex: python3 get_subject_files.py cfs`
 
 Run the script 'get_aws_ips.py' to get IP addresses of AWS ecosystem,
 
@@ -57,3 +64,5 @@ Run the script 'get_aws_ips.py' to get IP addresses of AWS ecosystem,
 Once all the above steps are completed, you can start the auth server,
 
 `node server.js`
+
+Notes: Server has to be restarted everytime there is a change in the metadata folder for latest to reflect.

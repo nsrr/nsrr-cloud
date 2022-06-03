@@ -1,1 +1,2 @@
 CFS	Cleveland Family Study	https://sleepdata.org/datasets/cfs	controlled
+LEARN	Learn	https://sleepdata.org/datasets/learn	open

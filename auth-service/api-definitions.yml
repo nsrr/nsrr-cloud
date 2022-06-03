@@ -1,0 +1,260 @@
+openapi: 3.0.0
+info:
+  version: '0.0.1'
+  title: 'NSRR Cloud API Documentation'
+  license:
+    name: MIT
+servers:
+  - url: 'https://cloud.sleepdata.org/api/v1'
+paths:
+  /auth-token:
+    get:
+      summary: 'Returns auth token for downloading controlled files'
+      operationId: getAuthToken
+      tags:
+        - auth-token
+      parameters:
+        - name: token
+          in: header
+          description: Token from sleepdata.org of the User
+          required: true
+          schema:
+            type: string
+        - name: dataset_name
+          in: query
+          description: Dataset name 
+          required: true
+          schema:
+              type: string
+      responses:
+        '200':
+          description: 'Sample response: Bearer token'
+          content:
+            application/json:
+                schema:
+                  type: object
+                  properties:
+                    auth_token:
+                        type: string
+                        description: Auth token                
+
+  /list/access:
+    get:
+      summary: 'Returns list of datasets that user is authorised to access'
+      operationId: getListAccess
+      tags:
+          - list_access
+      parameters:
+        - name: token
+          in: header
+          description: Token from sleepdata.org of the User
+          required: true
+          schema:
+            type: string
+      responses: 
+          '200':
+              description: 'Returns list of datasets with access authorization of requested user' 
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      datasets:
+                        type: array
+                        items:
+                            type: object
+                            properties:
+                                Dataset:
+                                    type: string
+                                    description: Dataset name
+                                "full name":
+                                    type: string
+                                    description: Full name of the dataset
+                                URL:
+                                    type: string
+                                    description: Dataset URL on sleepdata.org website
+                                Access:
+                                    type: string
+                                    description:  Access status to datasets of requested user
+
+  /list/all-files:
+    get:
+      summary: 'Returns list of files for a given dataset name/path'
+      operationId: getAllFiles
+      tags:
+          - list-all-files
+      parameters:
+        - name: dataset_name
+          in: query
+          required: true
+          schema:
+              type: string
+      responses: 
+          '200':
+              description: 'list of files' 
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      open_files:
+                          type: array
+                          items:
+                              $ref: '#/components/schemas/list_files_metadata'
+                              
+                      controlled_files:
+                          type: array
+                          items:
+                              $ref: '#/components/schemas/list_files_metadata'
+
+
+  /list/all-subjects:
+    get:
+      summary: 'Returns list of datasets that user is authorised to access'
+      operationId: getAllSubjects
+      tags:
+          - list-all-subjects
+      parameters:
+        - name: dataset_name
+          in: query
+          required: true
+          schema:
+              type: string
+      responses: 
+         '200':
+              description: 'Returns list of all subjects in a requested dataset' 
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      subjects:
+                          type: string
+                          description: subjects with '\n' delimited format
+
+
+  /list/subject-files:
+    get:
+      summary: 'Returns all files associated to a subject of a dataset'
+      operationId: getSubjectFiles
+      tags:
+          - list-subject-files
+      parameters:
+        - name: dataset_name
+          in: query
+          required: true
+          schema:
+              type: string
+        - name: subject
+          in: query
+          required: true
+          schema:
+              type: string              
+      responses: 
+          '200':
+              description: 'list of files' 
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      open_files:
+                          type: array
+                          items:
+                              $ref: '#/components/schemas/list_files_metadata'
+                              
+                      controlled_files:
+                          type: array
+                          items:
+                              $ref: '#/components/schemas/list_files_metadata'
+
+  /download/url/open:
+    get:
+      summary: 'Returns pre-signed URL for downloading requested file'
+      operationId: getDownloadUrlOpen
+      tags:
+          - download-url-open
+      parameters:
+        - name: file_name
+          in: query
+          required: true
+          schema:
+              type: string
+      responses: 
+          '200':
+              description: pre-signed URL to download requested file
+              content:
+                  application/json:
+                      schema:
+                          type: object
+                          properties:
+                              url:
+                                  type: string
+                                  description: URL
+
+  /download/url/controlled:
+    get:
+      summary: 'Returns list of datasets that user is authorised to access'
+      operationId: getDownloadUrlControlled
+      tags:
+          - download-url-controlled
+      security:
+          - bearerAuth: []
+      parameters:
+        - in: query
+          name: file_name
+          required: true
+          schema:
+              type: string
+      responses: 
+          '200':
+              description: pre-signed URL to download requested file
+              content:
+                  application/json:
+                      schema:
+                          type: object
+                          properties:
+                              url:
+                                  type: string
+                                  description: URL
+
+
+  /health:
+    get:
+      summary: 'Returns health status of api server'
+      operationId: getHealth
+      tags:
+          - health
+      responses: 
+          '200':
+              description: 'Sample response: Ok message and lists current EST time in epoch' 
+              content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            message:
+                                type: string
+                                description:  message to display liveliness
+                            timestamp:
+                                type: integer
+                                description: Response Epoch time
+components:  
+  schemas:
+      list_files_metadata:
+          type: object
+          properties:
+              file_name: 
+                  type: object
+                  properties:
+                    md5:
+                        type: string
+                        description: md5 value of the file
+                    size:
+                        type: string
+                        description: size of the file
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

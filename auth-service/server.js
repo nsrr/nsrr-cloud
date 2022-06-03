@@ -8,13 +8,14 @@ const { Pool } = require('pg');
 const crypto = require('crypto'); 
 const jwt = require('jsonwebtoken');
 const AWS = require('aws-sdk');
-const fs = require('fs')
+const fs = require('fs');
+const { exit } = require('process');
 
 var router = express.Router();
 
 if(process.argv.length !=2){
     console.log("Run command is node server.js")
-    return
+    exit(1)
 }
 
 require('dotenv').config();
@@ -561,6 +562,11 @@ router.get('/health', function(request, response, next) {
 	};
     response.status(200).send(healthcheck_resp);
   });
+
+app.get('/robots.txt', function (req, res) {
+    res.type('text/plain');
+    res.send("User-agent: *\nDisallow: /");
+});
 
 app.use('/api/v1',router);
 
