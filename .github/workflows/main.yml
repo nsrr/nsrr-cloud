@@ -1,0 +1,26 @@
+name: DAST - API scan for Dynamic Application Security Testing 
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+
+jobs:
+  zap_scan:
+    runs-on: ubuntu-latest
+    name: Scan Auth service API's
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: master
+
+      - name: ZAP Scan
+        uses: zaproxy/action-api-scan@v0.1.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          docker_name: 'owasp/zap2docker-stable'
+          format: openapi
+          target: auth-service/api-definitions.yml
