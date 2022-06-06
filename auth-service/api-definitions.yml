@@ -36,7 +36,19 @@ paths:
                   properties:
                     auth_token:
                         type: string
-                        description: Auth token                
+                        description: Auth token 
+        '500':
+              description: Error message
+              content:
+                  text/plain:
+                      schema: 
+                        anyOf:
+                          - $ref: '#/components/schemas/err_invalid_token'
+                          - $ref: '#/components/schemas/err_server_failure'
+                          - $ref: '#/components/schemas/err_dataset_not_found'
+                          - $ref: '#/components/schemas/err_system_error'
+
+              
 
   /list/access:
     get:
@@ -76,6 +88,15 @@ paths:
                                 Access:
                                     type: string
                                     description:  Access status to datasets of requested user
+          '500':
+              description: Error message
+              content:
+                  text/plain:
+                      schema: 
+                        anyOf:
+                          - $ref: '#/components/schemas/err_invalid_token'
+                          - $ref: '#/components/schemas/err_server_failure'
+
 
   /list/all-files:
     get:
@@ -106,7 +127,14 @@ paths:
                           type: array
                           items:
                               $ref: '#/components/schemas/list_files_metadata'
-
+          '500':
+              description: Error message
+              content:
+                  text/plain:
+                      schema: 
+                        anyOf:
+                          - $ref: '#/components/schemas/err_dataset_not_found'
+                          - $ref: '#/components/schemas/err_server_error'
 
   /list/all-subjects:
     get:
@@ -131,6 +159,14 @@ paths:
                       subjects:
                           type: string
                           description: subjects with '\n' delimited format
+         '500':
+              description: Error message
+              content:
+                  text/plain:
+                      schema: 
+                        anyOf:
+                          - $ref: '#/components/schemas/err_dataset_not_found'
+                          - $ref: '#/components/schemas/err_server_error'                          
 
 
   /list/subject-files:
@@ -167,6 +203,14 @@ paths:
                           type: array
                           items:
                               $ref: '#/components/schemas/list_files_metadata'
+          '500':
+              description: Error message
+              content:
+                  text/plain:
+                      schema: 
+                        anyOf:
+                          - $ref: '#/components/schemas/err_dataset_not_found'
+                          - $ref: '#/components/schemas/err_server_error'
 
   /download/url/open:
     get:
@@ -191,6 +235,14 @@ paths:
                               url:
                                   type: string
                                   description: URL
+          '500':
+              description: Error message
+              content:
+                  text/plain:
+                      schema: 
+                        anyOf:
+                          - $ref: '#/components/schemas/err_no_downloads_available'
+                          - $ref: '#/components/schemas/err_url_generation_failed'                                
 
   /download/url/controlled:
     get:
@@ -217,6 +269,17 @@ paths:
                               url:
                                   type: string
                                   description: URL
+
+          '500':
+              description: Error message
+              content:
+                  text/plain:
+                      schema: 
+                        anyOf:
+                          - $ref: '#/components/schemas/err_token_verification_failed'
+                          - $ref: '#/components/schemas/err_no_downloads_available'
+                          - $ref: '#/components/schemas/err_invalid_request'
+                          - $ref: '#/components/schemas/err_url_generation_failed'
 
 
   /health:
@@ -253,6 +316,33 @@ components:
                     size:
                         type: string
                         description: size of the file
+      err_token_verification_failed:
+        type: string
+        description: Token verification failed
+      err_no_downloads_available:
+        type: string
+        description: No downlaods available
+      err_invalid_request:
+        type: string
+        description: Invalid request
+      err_server_failure:
+        type: string
+        description: Server failure
+      err_server_error:
+        type: string
+        description: Server error
+      err_invalid_token:
+        type: string
+        description: Invalid token
+      err_dataset_not_found:
+        type: string
+        description: Dataset was not found. Did you mean one of the dataset (list)
+      err_url_generation_failed:
+        type: string
+        description: URL generation failed
+      err_system_error:
+        type: string
+        description: System error, please try again  
   securitySchemes:
     bearerAuth:
       type: http
